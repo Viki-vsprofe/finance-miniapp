@@ -230,10 +230,10 @@
 
 const ACCOUNTS = [
   { name: "Сбер", letter: "С", color: "#21A038", balance: 0, currency: "₽" },
-  { name: "Т-Банк", letter: "Т", color: "#1a1a1a", textColor: "#FFDD2D", border: "2px solid #FFDD2D44", balance: 0, currency: "₽" },
-  { name: "ЮМани", letter: "Ю", color: "#5C1FC4", balance: 0, currency: "₽" },
-  { name: "Халва", letter: "Х", color: "#7B2D8B", balance: 0, currency: "₽" },
-  { name: "ВТБ", letter: "В", color: "#009FDB", balance: 0, currency: "₽" },
+  { name: "Т-Банк", letter: "Т", color: "#FFDD2D", textColor: "#000", letterBg: "rgba(0,0,0,0.15)", balance: 0, currency: "₽" },
+  { name: "ЮMoney", letter: "Ю", color: "#5C16C5", balance: 0, currency: "₽" },
+  { name: "Халва", letter: "Х", color: "#5B2B82", balance: 0, currency: "₽" },
+  { name: "ВТБ", letter: "В", color: "#0066A1", balance: 0, currency: "₽" },
 ];
 
 const CREDITS = [
@@ -280,12 +280,12 @@ function renderAccounts() {
     const card = document.createElement('div');
     card.className = 'account-card';
     card.style.background = acc.color;
-    if (acc.border) card.style.border = acc.border;
+    if (acc.textColor) { card.style.color = acc.textColor; }
     card.innerHTML = `
-      <div class="bank-letter" style="${acc.textColor ? 'color:' + acc.textColor : ''}">${acc.letter}</div>
+      <div class="bank-letter" style="background:${acc.letterBg || 'rgba(255,255,255,0.2)'};color:${acc.textColor || '#fff'}">${acc.letter}</div>
       <div class="acc-info">
         <div class="acc-name">${acc.name}</div>
-        <div class="acc-currency">${acc.currency}</div>
+        <div class="acc-currency" style="color:${acc.textColor ? acc.textColor+'99' : 'rgba(255,255,255,0.6)'}">${acc.currency}</div>
       </div>
       <div class="acc-balance">${fmt(acc.balance, '')}</div>
     `;
