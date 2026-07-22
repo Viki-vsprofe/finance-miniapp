@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Мои финансы</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f0f0f;
+    --card: #1a1a1a;
+    --card2: #222;
+    --text: #fff;
+    --text2: #aaa;
+    --accent: #4CAF50;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 16px;
+    padding-bottom: 80px;
+  }
+  .header { margin-bottom: 20px; }
+  .header h1 { font-size: 20px; font-weight: 700; }
+  .header .date { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+  .total-card {
+    background: linear-gradient(135deg, #1e3a2f, #2d5a3d);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .total-label { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+  .total-amount { font-size: 36px; font-weight: 700; letter-spacing: -1px; }
+  .total-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+
+  /* Счета */
+  .accounts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .account-card {
+    border-radius: 16px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .account-card .bank-letter {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800;
+    margin-bottom: 12px;
+  }
+  .account-card .acc-name { font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+  .account-card .acc-balance { font-size: 18px; font-weight: 700; }
+  .account-card .acc-currency { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+  /* Кредиты */
+  .credits-list { margin-bottom: 20px; }
+  .credit-item {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .credit-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .credit-info { flex: 1; }
+  .credit-name { font-size: 14px; font-weight: 600; }
+  .credit-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .credit-amount { text-align: right; }
+  .credit-payment { font-size: 14px; font-weight: 600; color: #FF6B6B; }
+  .credit-remaining { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .progress-bar {
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #FF6B6B, #FF8E53);
+  }
+
+  /* Подписки */
+  .subs-list { margin-bottom: 20px; }
+  .sub-item {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .sub-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .sub-name { font-size: 14px; font-weight: 600; flex: 1; }
+  .sub-price { font-size: 14px; font-weight: 600; color: var(--text2); }
+  .subs-total {
+    background: var(--card2);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .subs-total-label { font-size: 13px; color: var(--text2); }
+  .subs-total-amount { font-size: 16px; font-weight: 700; color: #FF9500; }
+
+  /* Tabs */
+  .tabs {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #111;
+    border-top: 1px solid #222;
+    display: flex;
+    padding: 8px 0 20px;
+    z-index: 100;
+  }
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--text2);
+    font-size: 10px;
+    cursor: pointer;
+    padding: 6px;
+    transition: color 0.2s;
+  }
+  .tab-btn.active { color: var(--accent); }
+  .tab-btn .icon { font-size: 22px; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>💰 Мои финансы</h1>
+  <div class="date" id="current-date"></div>
+</div>
+
+<!-- СТРАНИЦА: СЧЕТА -->
+<div class="page active" id="page-accounts">
+
+  <div class="total-card">
+    <div class="total-label">Общий баланс</div>
+    <div class="total-amount" id="total-balance">0 ₽</div>
+    <div class="total-sub" id="total-sub-text"></div>
+  </div>
+
+  <div class="section-title">Счета</div>
+  <div class="accounts-grid" id="accounts-grid"></div>
+
+</div>
+
+<!-- СТРАНИЦА: КРЕДИТЫ -->
+<div class="page" id="page-credits">
+  <div class="section-title" style="margin-bottom:16px">Кредиты и займы</div>
+  <div class="credits-list" id="credits-list"></div>
+</div>
+
+<!-- СТРАНИЦА: ПОДПИСКИ -->
+<div class="page" id="page-subs">
+  <div class="section-title" style="margin-bottom:16px">Ежемесячные подписки</div>
+  <div class="subs-list" id="subs-list"></div>
+  <div class="subs-total">
+    <span class="subs-total-label">Итого в месяц</span>
+    <span class="subs-total-amount" id="subs-total">0 ₽</span>
+  </div>
+</div>
+
+<!-- НАВБАР -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showPage('accounts', this)">
+    <span class="icon">🏦</span>Счета
+  </button>
+  <button class="tab-btn" onclick="showPage('credits', this)">
+    <span class="icon">💳</span>Кредиты
+  </button>
+  <button class="tab-btn" onclick="showPage('subs', this)">
+    <span class="icon">🔄</span>Подписки
+  </button>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// ДАННЫЕ — РЕДАКТИРУЙ ЗДЕСЬ
+// ══════════════════════════════════════
+
+const ACCOUNTS = [
+  { name: "Сбер", letter: "С", color: "#21A038", balance: 0, currency: "₽" },
+  { name: "Тинькофф", letter: "Т", color: "#1a1a1a", textColor: "#FFDD2D", balance: 0, currency: "₽" },
+  { name: "ВТБ", letter: "В", color: "#009FDB", balance: 0, currency: "₽" },
+  { name: "Альфа", letter: "А", color: "#EF3124", balance: 0, currency: "₽" },
+  { name: "Валюта", letter: "$", color: "#5856D6", balance: 0, currency: "$" },
+];
+
+const CREDITS = [
+  { name: "Ипотека", bank: "Сбер", icon: "🏠", payment: 0, remaining: 0, total: 0 },
+  { name: "Авто", bank: "ВТБ", icon: "🚗", payment: 0, remaining: 0, total: 0 },
+];
+
+const SUBSCRIPTIONS = [
+  { name: "Claude Pro", icon: "🤖", price: 0, currency: "₽" },
+  { name: "Яндекс Плюс", icon: "🎵", price: 0, currency: "₽" },
+  { name: "iCloud", icon: "☁️", price: 0, currency: "₽" },
+  { name: "Другое", icon: "📱", price: 0, currency: "₽" },
+];
+
+// ══════════════════════════════════════
+
+// Telegram WebApp init
+if (window.Telegram?.WebApp) {
+  Telegram.WebApp.ready();
+  Telegram.WebApp.expand();
+}
+
+// Дата
+const now = new Date();
+document.getElementById('current-date').textContent = now.toLocaleDateString('ru', {
+  weekday: 'long', day: 'numeric', month: 'long'
+});
+
+// Форматирование
+function fmt(n, currency = '₽') {
+  return n.toLocaleString('ru') + ' ' + currency;
+}
+
+// Рендер счетов
+function renderAccounts() {
+  const grid = document.getElementById('accounts-grid');
+  grid.innerHTML = '';
+  let total = 0;
+  ACCOUNTS.forEach(acc => {
+    total += acc.currency === '₽' ? acc.balance : 0;
+    const card = document.createElement('div');
+    card.className = 'account-card';
+    card.style.background = acc.color;
+    card.innerHTML = `
+      <div class="bank-letter" style="${acc.textColor ? 'color:' + acc.textColor : ''}">${acc.letter}</div>
+      <div class="acc-name">${acc.name}</div>
+      <div class="acc-balance">${fmt(acc.balance, '')}</div>
+      <div class="acc-currency">${acc.currency}</div>
+    `;
+    grid.appendChild(card);
+  });
+  document.getElementById('total-balance').textContent = fmt(total);
+  const usd = ACCOUNTS.find(a => a.currency === '$');
+  if (usd && usd.balance > 0) {
+    document.getElementById('total-sub-text').textContent = `+ ${fmt(usd.balance, '$')}`;
+  }
+}
+
+// Рендер кредитов
+function renderCredits() {
+  const list = document.getElementById('credits-list');
+  list.innerHTML = '';
+  CREDITS.forEach(c => {
+    const pct = c.total > 0 ? Math.round((1 - c.remaining / c.total) * 100) : 0;
+    const item = document.createElement('div');
+    item.className = 'credit-item';
+    item.innerHTML = `
+      <div class="credit-icon" style="background:#2a1a1a">${c.icon}</div>
+      <div class="credit-info">
+        <div class="credit-name">${c.name} <span style="color:#aaa;font-weight:400;font-size:12px">${c.bank}</span></div>
+        <div class="credit-sub">Остаток: ${fmt(c.remaining)}</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="credit-amount">
+        <div class="credit-payment">${fmt(c.payment)}/мес</div>
+        <div class="credit-remaining">${pct}% выплачено</div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+// Рендер подписок
+function renderSubs() {
+  const list = document.getElementById('subs-list');
+  list.innerHTML = '';
+  let total = 0;
+  SUBSCRIPTIONS.forEach(s => {
+    total += s.price;
+    const item = document.createElement('div');
+    item.className = 'sub-item';
+    item.innerHTML = `
+      <div class="sub-icon" style="background:#1a1a2e">${s.icon}</div>
+      <div class="sub-name">${s.name}</div>
+      <div class="sub-price">${fmt(s.price, s.currency)}</div>
+    `;
+    list.appendChild(item);
+  });
+  document.getElementById('subs-total').textContent = fmt(total);
+}
+
+// Навигация
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Инициализация
+renderAccounts();
+renderCredits();
+renderSubs();
+</script>
+</body>
+</html>
