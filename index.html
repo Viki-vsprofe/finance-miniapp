@@ -8,9 +8,9 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #0f0f0f;
-    --card: #1a1a1a;
-    --card2: #222;
+    --bg: #1c2333;
+    --card: #242f45;
+    --card2: #2a3650;
     --text: #fff;
     --text2: #aaa;
     --accent: #4CAF50;
@@ -230,7 +230,7 @@
 
 const ACCOUNTS = [
   { name: "Сбер", letter: "С", color: "#21A038", balance: 0, currency: "₽" },
-  { name: "Т-Банк", letter: "Т", color: "#1a1a1a", textColor: "#FFDD2D", balance: 0, currency: "₽" },
+  { name: "Т-Банк", letter: "Т", color: "#1a1a1a", textColor: "#FFDD2D", border: "2px solid #FFDD2D44", balance: 0, currency: "₽" },
   { name: "ЮМани", letter: "Ю", color: "#5C1FC4", balance: 0, currency: "₽" },
   { name: "Халва", letter: "Х", color: "#7B2D8B", balance: 0, currency: "₽" },
   { name: "ВТБ", letter: "В", color: "#009FDB", balance: 0, currency: "₽" },
@@ -280,6 +280,7 @@ function renderAccounts() {
     const card = document.createElement('div');
     card.className = 'account-card';
     card.style.background = acc.color;
+    if (acc.border) card.style.border = acc.border;
     card.innerHTML = `
       <div class="bank-letter" style="${acc.textColor ? 'color:' + acc.textColor : ''}">${acc.letter}</div>
       <div class="acc-info">
