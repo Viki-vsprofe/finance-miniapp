@@ -259,16 +259,16 @@ const SUBSCRIPTIONS = [
   const params = new URLSearchParams(window.location.search);
   const code = params.get('code');
   if (code) {
-    fetch('http://150.241.97.108:9988/', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({code: code})
-    }).then(r => r.json()).then(d => {
-      if (d.ok) {
-        const b = document.body;
-        b.innerHTML = '<div style="font-family:sans-serif;text-align:center;padding:60px;color:#4CAF50"><h2>✅ ЮMoney подключён!</h2><p style="color:#aaa;margin-top:12px">Можно закрыть эту вкладку.</p></div>';
-      }
-    }).catch(() => {});
+    document.body.innerHTML = `
+      <div style="font-family:sans-serif;text-align:center;padding:40px;background:#1c2333;min-height:100vh;color:#fff">
+        <h2 style="color:#4CAF50;margin-bottom:16px">✅ Авторизация прошла!</h2>
+        <p style="color:#aaa;margin-bottom:24px">Скопируй код и пришли Ариника в Telegram:</p>
+        <div onclick="navigator.clipboard.writeText('${code}').then(()=>this.style.background='#2d5a3d')"
+             style="background:#242f45;border-radius:12px;padding:16px;word-break:break-all;cursor:pointer;font-family:monospace;font-size:13px;border:2px solid #4CAF50">
+          ${code}
+        </div>
+        <p style="color:#888;font-size:12px;margin-top:12px">Нажми на код — скопируется автоматически</p>
+      </div>`;
     history.replaceState({}, '', window.location.pathname);
   }
 })();
