@@ -232,21 +232,28 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
   }
+  .te-left { flex: 1; min-width: 0; }
   .te-label {
-    font-size: 12px;
-    color: rgba(255,240,190,0.65);
+    font-size: 11px;
+    color: rgba(255,240,190,0.6);
     letter-spacing: 0.3px;
-  }
-  .te-amount {
-    font-size: 20px;
-    font-weight: 700;
-    color: #fff8e8;
+    margin-bottom: 3px;
   }
   .te-breakdown {
     font-size: 10px;
-    color: rgba(255,240,190,0.45);
-    margin-top: 2px;
+    color: rgba(255,240,190,0.4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .te-amount {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff8e8;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   /* Кредиты */
@@ -410,9 +417,11 @@
   </div>
 
   <div class="total-expenses-card">
-    <div class="te-label">Итого расходов в месяц</div>
+    <div class="te-left">
+      <div class="te-label">Итого расходов в месяц</div>
+      <div class="te-breakdown" id="total-expenses-breakdown"></div>
+    </div>
     <div class="te-amount" id="total-expenses">0 ₽</div>
-    <div class="te-breakdown" id="total-expenses-breakdown"></div>
   </div>
 </div>
 
