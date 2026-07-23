@@ -254,6 +254,25 @@ const SUBSCRIPTIONS = [
 
 // ══════════════════════════════════════
 
+// ЮMoney OAuth callback handler
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  if (code) {
+    fetch('http://150.241.97.108:9988/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({code: code})
+    }).then(r => r.json()).then(d => {
+      if (d.ok) {
+        const b = document.body;
+        b.innerHTML = '<div style="font-family:sans-serif;text-align:center;padding:60px;color:#4CAF50"><h2>✅ ЮMoney подключён!</h2><p style="color:#aaa;margin-top:12px">Можно закрыть эту вкладку.</p></div>';
+      }
+    }).catch(() => {});
+    history.replaceState({}, '', window.location.pathname);
+  }
+})();
+
 // Telegram WebApp init
 if (window.Telegram?.WebApp) {
   Telegram.WebApp.ready();
