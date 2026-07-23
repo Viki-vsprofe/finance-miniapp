@@ -125,12 +125,12 @@
     margin-bottom: 12px;
   }
 
-  /* Счета */
+  /* Счета — компактная 2-колонка */
   .accounts-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
     position: relative; z-index: 1;
   }
   .account-card {
@@ -138,35 +138,63 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 14px 16px;
+    border-radius: 16px;
+    padding: 12px 12px;
     display: flex;
-    align-items: center;
-    gap: 14px;
+    flex-direction: column;
+    gap: 8px;
     box-shadow: 0 4px 16px var(--shadow);
   }
+  .account-card.wide {
+    grid-column: span 2;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
   .bank-badge {
-    width: 44px; height: 44px;
-    border-radius: 14px;
+    width: 36px; height: 36px;
+    border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 17px; font-weight: 800;
+    font-size: 15px; font-weight: 800;
     flex-shrink: 0;
     box-shadow: 0 3px 10px rgba(0,0,0,0.12);
   }
   .acc-info { flex: 1; }
-  .acc-name { font-size: 15px; font-weight: 600; color: var(--text); }
-  .acc-type { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .acc-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .acc-type { font-size: 11px; color: var(--text2); margin-top: 1px; }
   .acc-balance {
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--text);
-    text-align: right;
   }
+  .account-card.wide .acc-balance { text-align: right; font-size: 16px; }
   .acc-balance.live::after {
     content: ' •';
     color: #6dba7d;
-    font-size: 10px;
+    font-size: 9px;
   }
+
+  /* Сводка обязательств */
+  .obligations-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+    position: relative; z-index: 1;
+  }
+  .obligation-card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 4px 16px var(--shadow);
+  }
+  .obl-icon { font-size: 20px; margin-bottom: 6px; }
+  .obl-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+  .obl-amount { font-size: 16px; font-weight: 700; }
+  .obl-sub { font-size: 10px; color: var(--text2); margin-top: 2px; }
 
   /* Кредиты */
   .credits-list { margin-bottom: 24px; position: relative; z-index: 1; }
@@ -312,23 +340,20 @@
   <div class="section-title">Счета</div>
   <div class="accounts-grid" id="accounts-grid"></div>
 
-  <!-- Сводка обязательств -->
   <div class="section-title">Ежемесячные обязательства</div>
-  <div class="account-card" style="margin-bottom:8px">
-    <div class="bank-badge" style="background:linear-gradient(135deg,#c26b6b,#d4947a);color:#fff">💳</div>
-    <div class="acc-info">
-      <div class="acc-name">Кредиты и займы</div>
-      <div class="acc-type" id="credits-summary-detail">3 платежа</div>
+  <div class="obligations-grid">
+    <div class="obligation-card">
+      <div class="obl-icon">💳</div>
+      <div class="obl-label">Кредиты и займы</div>
+      <div class="obl-amount" style="color:var(--red)" id="credits-summary-total">16 514 ₽</div>
+      <div class="obl-sub">в месяц</div>
     </div>
-    <div class="acc-balance" style="color:var(--red)" id="credits-summary-total">16 514 ₽/мес</div>
-  </div>
-  <div class="account-card">
-    <div class="bank-badge" style="background:linear-gradient(135deg,#a87bd4,#7b9bd4);color:#fff">🔄</div>
-    <div class="acc-info">
-      <div class="acc-name">Подписки</div>
-      <div class="acc-type">7 сервисов</div>
+    <div class="obligation-card">
+      <div class="obl-icon">🔄</div>
+      <div class="obl-label">Подписки</div>
+      <div class="obl-amount" style="color:var(--accent2)" id="subs-summary-total">0 ₽</div>
+      <div class="obl-sub">в месяц</div>
     </div>
-    <div class="acc-balance" style="color:var(--accent2)">8 440 ₽/мес</div>
   </div>
 </div>
 
@@ -439,15 +464,16 @@ function renderAccounts() {
     card.className = 'account-card';
     card.innerHTML = `
       <div class="bank-badge" style="background:${acc.color};color:${acc.textColor}">${acc.letter}</div>
-      <div class="acc-info">
-        <div class="acc-name">${acc.name}</div>
-        <div class="acc-type">Рублёвый счёт</div>
-      </div>
+      <div class="acc-name">${acc.name}</div>
       <div class="acc-balance${acc.live ? ' live' : ''}">${fmt(acc.balance)}</div>
     `;
     grid.appendChild(card);
   });
   document.getElementById('total-balance').textContent = fmt(total);
+  // Update credits summary
+  const creditTotal = CREDITS.reduce((s, c) => s + c.payment, 0);
+  const el = document.getElementById('credits-summary-total');
+  if (el) el.textContent = fmt(creditTotal);
 }
 
 function renderCredits() {
@@ -492,6 +518,8 @@ function renderSubs() {
     list.appendChild(item);
   });
   document.getElementById('subs-total').textContent = fmt(total);
+  const el2 = document.getElementById('subs-summary-total');
+  if (el2) el2.textContent = fmt(total);
 }
 
 function showPage(name, btn) {
