@@ -360,8 +360,8 @@ const ACCOUNTS = [
 ];
 
 const CREDITS = [
-  { name: "Заём", bank: "Т-Банк", icon: "💳", payment: 9020, remaining: 0, total: 0 },
-  { name: "Кредит", bank: "Т-Банк", icon: "💳", payment: 3340, remaining: 0, total: 0 },
+  { name: "Заём", bank: "Т-Банк", icon: "💳", payment: 9020, remaining: 0, total: 35342 },
+  { name: "Кредит", bank: "Т-Банк", icon: "💳", payment: 3340, remaining: 0, total: 16608 },
   { name: "Рассрочка", bank: "Халва", icon: "🛒", payment: 4154, remaining: 0, total: 0 },
 ];
 
@@ -488,14 +488,24 @@ renderAccounts();
 renderCredits();
 renderSubs();
 
-// Живой баланс ЮMoney
+// Живые балансы из Дзен-мани + ЮMoney
 fetch('./balance.json?t=' + Date.now())
   .then(r => r.json())
   .then(data => {
-    const idx = ACCOUNTS.findIndex(a => a.name === 'ЮMoney');
-    if (idx >= 0) {
-      ACCOUNTS[idx].balance = data.balance;
-      renderAccounts();
+    // Балансы счетов
+    const balances = data.balances || (data.balance !== undefined ? {'ЮMoney': data.balance} : {});
+    ACCOUNTS.forEach((acc, i) => {
+      if (balances[acc.name] !== undefined) {
+        ACCOUNTS[i].balance = balances[acc.name];
+      }
+    });
+    renderAccounts();
+    // Остатки по кредитам
+    if (data.loans) {
+      if (data.loans.loan_zaem !== undefined)     CREDITS[0].remaining = data.loans.loan_zaem;
+      if (data.loans.loan_kredit !== undefined)   CREDITS[1].remaining = data.loans.loan_kredit;
+      if (data.loans.loan_rassrochka !== undefined) CREDITS[2].remaining = data.loans.loan_rassrochka;
+      renderCredits();
     }
   })
   .catch(() => {});
