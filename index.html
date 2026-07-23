@@ -218,6 +218,37 @@
   .obl-amount { font-size: 16px; font-weight: 700; }
   .obl-sub { font-size: 10px; color: var(--text2); margin-top: 2px; }
 
+  /* Итого расходов */
+  .total-expenses-card {
+    background: linear-gradient(135deg, rgba(60,55,30,0.85), rgba(80,72,42,0.85));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,240,180,0.15);
+    border-radius: 18px;
+    padding: 16px 20px;
+    margin-top: 8px;
+    position: relative; z-index: 1;
+    box-shadow: 0 6px 20px rgba(40,35,15,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .te-label {
+    font-size: 12px;
+    color: rgba(255,240,190,0.65);
+    letter-spacing: 0.3px;
+  }
+  .te-amount {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff8e8;
+  }
+  .te-breakdown {
+    font-size: 10px;
+    color: rgba(255,240,190,0.45);
+    margin-top: 2px;
+  }
+
   /* Кредиты */
   .credits-list { margin-bottom: 24px; position: relative; z-index: 1; }
   .credit-item {
@@ -376,6 +407,12 @@
       <div class="obl-amount" style="color:var(--accent2)" id="subs-summary-total">0 ₽</div>
       <div class="obl-sub">в месяц</div>
     </div>
+  </div>
+
+  <div class="total-expenses-card">
+    <div class="te-label">Итого расходов в месяц</div>
+    <div class="te-amount" id="total-expenses">0 ₽</div>
+    <div class="te-breakdown" id="total-expenses-breakdown"></div>
   </div>
 </div>
 
@@ -564,10 +601,20 @@ function showPage(name, btn) {
   btn.classList.add('active');
 }
 
+function renderTotalExpenses() {
+  const creditTotal = CREDITS.reduce((s, c) => s + c.payment, 0);
+  const subsTotal = SUBSCRIPTIONS.reduce((s, s2) => s + s2.price, 0);
+  const total = creditTotal + subsTotal;
+  document.getElementById('total-expenses').textContent = fmt(total);
+  document.getElementById('total-expenses-breakdown').textContent =
+    `кредиты ${fmt(creditTotal)} + подписки ${fmt(subsTotal)}`;
+}
+
 // Инициализация
 renderAccounts();
 renderCredits();
 renderSubs();
+renderTotalExpenses();
 
 // Живые балансы из Дзен-мани + ЮMoney
 fetch('./balance.json?t=' + Date.now())
