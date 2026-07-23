@@ -373,6 +373,18 @@ function showPage(name, btn) {
 renderAccounts();
 renderCredits();
 renderSubs();
+
+// Загружаем живой баланс ЮMoney из balance.json
+fetch('./balance.json?t=' + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    const idx = ACCOUNTS.findIndex(a => a.name === 'ЮMoney');
+    if (idx >= 0) {
+      ACCOUNTS[idx].balance = data.balance;
+      renderAccounts();
+    }
+  })
+  .catch(() => {});
 </script>
 </body>
 </html>
