@@ -8,99 +8,198 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #1c2333;
-    --card: #242f45;
-    --card2: #2a3650;
-    --text: #fff;
-    --text2: #aaa;
-    --accent: #4CAF50;
+    --bg1: #f7efe8;
+    --bg2: #ede8f5;
+    --glass: rgba(255,255,255,0.65);
+    --glass2: rgba(255,255,255,0.45);
+    --border: rgba(255,255,255,0.8);
+    --text: #2d2118;
+    --text2: #9b8878;
+    --accent: #b8896a;
+    --accent2: #9b7eb8;
+    --red: #c26b6b;
+    --shadow: rgba(180,140,110,0.18);
   }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg);
+    background: linear-gradient(145deg, var(--bg1) 0%, var(--bg2) 100%);
+    background-attachment: fixed;
     color: var(--text);
     min-height: 100vh;
-    padding: 16px;
-    padding-bottom: 80px;
+    padding: 20px 16px 90px;
   }
-  .header { margin-bottom: 20px; }
-  .header h1 { font-size: 20px; font-weight: 700; }
-  .header .date { font-size: 13px; color: var(--text2); margin-top: 2px; }
 
-  .total-card {
-    background: linear-gradient(135deg, #1e3a2f, #2d5a3d);
-    border-radius: 20px;
-    padding: 24px;
-    margin-bottom: 20px;
-    text-align: center;
+  /* Декоративные круги */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -80px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,170,220,0.35), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
   }
-  .total-label { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
-  .total-amount { font-size: 36px; font-weight: 700; letter-spacing: -1px; }
-  .total-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: 60px; left: -80px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(220,185,155,0.35), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .header {
+    margin-bottom: 20px;
+    position: relative; z-index: 1;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .header .date {
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 3px;
+  }
+
+  /* Карта итого */
+  .total-card {
+    background: linear-gradient(135deg, #c4986a, #a87bd4);
+    border-radius: 24px;
+    padding: 28px 24px;
+    margin-bottom: 24px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 12px 32px rgba(180,130,180,0.3);
+    overflow: hidden;
+  }
+  .total-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+  }
+  .total-card::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: 20px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .total-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+    position: relative; z-index: 1;
+  }
+  .total-amount {
+    font-size: 40px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1.5px;
+    position: relative; z-index: 1;
+  }
+  .total-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 8px;
+    position: relative; z-index: 1;
+  }
 
   .section-title {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 700;
     color: var(--text2);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
   }
 
   /* Счета */
   .accounts-grid {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 24px;
+    position: relative; z-index: 1;
   }
   .account-card {
-    border-radius: 14px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
     padding: 14px 16px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
+    box-shadow: 0 4px 16px var(--shadow);
   }
-  .account-card .bank-letter {
-    width: 42px; height: 42px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.2);
+  .bank-badge {
+    width: 44px; height: 44px;
+    border-radius: 14px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 800;
+    font-size: 17px; font-weight: 800;
     flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
   }
-  .account-card .acc-info { flex: 1; }
-  .account-card .acc-name { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.95); }
-  .account-card .acc-currency { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 1px; }
-  .account-card .acc-balance { font-size: 16px; font-weight: 700; text-align: right; }
+  .acc-info { flex: 1; }
+  .acc-name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .acc-type { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .acc-balance {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: right;
+  }
+  .acc-balance.live::after {
+    content: ' •';
+    color: #6dba7d;
+    font-size: 10px;
+  }
 
   /* Кредиты */
-  .credits-list { margin-bottom: 20px; }
+  .credits-list { margin-bottom: 24px; position: relative; z-index: 1; }
   .credit-item {
-    background: var(--card);
-    border-radius: 14px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
     padding: 14px 16px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 12px;
+    box-shadow: 0 4px 16px var(--shadow);
   }
   .credit-icon {
-    width: 40px; height: 40px;
-    border-radius: 12px;
+    width: 42px; height: 42px;
+    border-radius: 14px;
+    background: rgba(194,107,107,0.12);
     display: flex; align-items: center; justify-content: center;
     font-size: 20px;
     flex-shrink: 0;
   }
   .credit-info { flex: 1; }
-  .credit-name { font-size: 14px; font-weight: 600; }
-  .credit-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .credit-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .credit-bank { font-size: 12px; color: var(--text2); margin-top: 1px; }
   .credit-amount { text-align: right; }
-  .credit-payment { font-size: 14px; font-weight: 600; color: #FF6B6B; }
-  .credit-remaining { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .credit-payment { font-size: 15px; font-weight: 700; color: var(--red); }
+  .credit-pct { font-size: 11px; color: var(--text2); margin-top: 2px; }
   .progress-bar {
-    height: 3px;
-    background: #333;
+    height: 4px;
+    background: rgba(0,0,0,0.08);
     border-radius: 2px;
     margin-top: 8px;
     overflow: hidden;
@@ -108,48 +207,70 @@
   .progress-fill {
     height: 100%;
     border-radius: 2px;
-    background: linear-gradient(90deg, #FF6B6B, #FF8E53);
+    background: linear-gradient(90deg, #c26b6b, #d4947a);
   }
-
-  /* Подписки */
-  .subs-list { margin-bottom: 20px; }
-  .sub-item {
-    background: var(--card);
-    border-radius: 14px;
-    padding: 12px 16px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .sub-icon {
-    width: 38px; height: 38px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .sub-name { font-size: 14px; font-weight: 600; flex: 1; }
-  .sub-price { font-size: 14px; font-weight: 600; color: var(--text2); }
-  .subs-total {
-    background: var(--card2);
+  .credits-total {
+    background: var(--glass2);
+    border: 1px solid var(--border);
     border-radius: 14px;
     padding: 12px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    backdrop-filter: blur(10px);
+  }
+  .credits-total-label { font-size: 13px; color: var(--text2); }
+  .credits-total-amount { font-size: 15px; font-weight: 700; color: var(--red); }
+
+  /* Подписки */
+  .subs-list { margin-bottom: 12px; position: relative; z-index: 1; }
+  .sub-item {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 3px 12px var(--shadow);
+  }
+  .sub-icon {
+    width: 38px; height: 38px;
+    border-radius: 12px;
+    background: rgba(168,123,212,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .sub-name { font-size: 14px; font-weight: 600; flex: 1; color: var(--text); }
+  .sub-price { font-size: 14px; font-weight: 600; color: var(--text2); }
+  .subs-total {
+    background: var(--glass2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    position: relative; z-index: 1;
   }
   .subs-total-label { font-size: 13px; color: var(--text2); }
-  .subs-total-amount { font-size: 16px; font-weight: 700; color: #FF9500; }
+  .subs-total-amount { font-size: 15px; font-weight: 700; color: var(--accent2); }
 
-  /* Tabs */
+  /* Навбар */
   .tabs {
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    background: #111;
-    border-top: 1px solid #222;
+    background: rgba(247,239,232,0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.7);
     display: flex;
-    padding: 8px 0 20px;
+    padding: 10px 0 24px;
     z-index: 100;
   }
   .tab-btn {
@@ -157,11 +278,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     background: none;
     border: none;
     color: var(--text2);
     font-size: 10px;
+    font-weight: 500;
     cursor: pointer;
     padding: 6px;
     transition: color 0.2s;
@@ -169,7 +291,7 @@
   .tab-btn.active { color: var(--accent); }
   .tab-btn .icon { font-size: 22px; }
 
-  .page { display: none; }
+  .page { display: none; position: relative; z-index: 1; }
   .page.active { display: block; }
 </style>
 </head>
@@ -180,27 +302,28 @@
   <div class="date" id="current-date"></div>
 </div>
 
-<!-- СТРАНИЦА: СЧЕТА -->
+<!-- СЧЕТА -->
 <div class="page active" id="page-accounts">
-
   <div class="total-card">
     <div class="total-label">Общий баланс</div>
     <div class="total-amount" id="total-balance">0 ₽</div>
     <div class="total-sub" id="total-sub-text"></div>
   </div>
-
   <div class="section-title">Счета</div>
   <div class="accounts-grid" id="accounts-grid"></div>
-
 </div>
 
-<!-- СТРАНИЦА: КРЕДИТЫ -->
+<!-- КРЕДИТЫ -->
 <div class="page" id="page-credits">
   <div class="section-title" style="margin-bottom:16px">Кредиты и займы</div>
   <div class="credits-list" id="credits-list"></div>
+  <div class="credits-total">
+    <span class="credits-total-label">Итого в месяц</span>
+    <span class="credits-total-amount" id="credits-total">0 ₽</span>
+  </div>
 </div>
 
-<!-- СТРАНИЦА: ПОДПИСКИ -->
+<!-- ПОДПИСКИ -->
 <div class="page" id="page-subs">
   <div class="section-title" style="margin-bottom:16px">Ежемесячные подписки</div>
   <div class="subs-list" id="subs-list"></div>
@@ -225,15 +348,15 @@
 
 <script>
 // ══════════════════════════════════════
-// ДАННЫЕ — РЕДАКТИРУЙ ЗДЕСЬ
+// ДАННЫЕ
 // ══════════════════════════════════════
 
 const ACCOUNTS = [
-  { name: "Сбер", letter: "С", color: "#21A038", balance: 0, currency: "₽" },
-  { name: "Т-Банк", letter: "Т", color: "#FFDD2D", textColor: "#000", letterBg: "rgba(0,0,0,0.15)", balance: 0, currency: "₽" },
-  { name: "Халва", letter: "Х", color: "#5B2B82", balance: 0, currency: "₽" },
-  { name: "ВТБ", letter: "В", color: "#0066A1", balance: 0, currency: "₽" },
-  { name: "ЮMoney", letter: "Ю", color: "#5C16C5", balance: 0, currency: "₽" },
+  { name: "Сбер", letter: "С", color: "#21A038", textColor: "#fff", balance: 0, currency: "₽" },
+  { name: "Т-Банк", letter: "Т", color: "#FFDD2D", textColor: "#111", balance: 0, currency: "₽" },
+  { name: "Халва", letter: "Х", color: "#7B3FA0", textColor: "#fff", balance: 0, currency: "₽" },
+  { name: "ВТБ", letter: "В", color: "#0066A1", textColor: "#fff", balance: 0, currency: "₽" },
+  { name: "ЮMoney", letter: "Ю", color: "#5C16C5", textColor: "#fff", balance: 0, currency: "₽", live: true },
 ];
 
 const CREDITS = [
@@ -243,37 +366,36 @@ const CREDITS = [
 ];
 
 const SUBSCRIPTIONS = [
-  { name: "ВИП", icon: "⭐", price: 3500, currency: "₽" },
-  { name: "ИИ Клод", icon: "🤖", price: 2000, currency: "₽" },
-  { name: "Виртуальная карта", icon: "💳", price: 690, currency: "₽" },
-  { name: "Билайн (мой)", icon: "📱", price: 550, currency: "₽" },
-  { name: "Билайн (дочь)", icon: "📶", price: 350, currency: "₽" },
-  { name: "Сервер", icon: "🖥️", price: 400, currency: "₽" },
-  { name: "Мари Клаб", icon: "🎓", price: 1300, currency: "₽" },
+  { name: "ВИП", icon: "⭐", price: 3500 },
+  { name: "ИИ Клод", icon: "🤖", price: 2000 },
+  { name: "Виртуальная карта", icon: "💳", price: 690 },
+  { name: "Билайн (мой)", icon: "📱", price: 550 },
+  { name: "Билайн (дочь)", icon: "📶", price: 350 },
+  { name: "Сервер", icon: "🖥️", price: 400 },
+  { name: "Мари Клаб", icon: "🎓", price: 1300 },
 ];
 
 // ══════════════════════════════════════
 
-// ЮMoney OAuth callback handler
+// OAuth callback handler
 (function() {
   const params = new URLSearchParams(window.location.search);
   const code = params.get('code');
   if (code) {
     document.body.innerHTML = `
-      <div style="font-family:sans-serif;text-align:center;padding:40px;background:#1c2333;min-height:100vh;color:#fff">
-        <h2 style="color:#4CAF50;margin-bottom:16px">✅ Авторизация прошла!</h2>
-        <p style="color:#aaa;margin-bottom:24px">Скопируй код и пришли Ариника в Telegram:</p>
-        <div onclick="navigator.clipboard.writeText('${code}').then(()=>this.style.background='#2d5a3d')"
-             style="background:#242f45;border-radius:12px;padding:16px;word-break:break-all;cursor:pointer;font-family:monospace;font-size:13px;border:2px solid #4CAF50">
+      <div style="font-family:sans-serif;text-align:center;padding:60px 24px;background:linear-gradient(145deg,#f7efe8,#ede8f5);min-height:100vh">
+        <h2 style="color:#6dba7d;margin-bottom:16px;font-size:22px">✅ Авторизация прошла!</h2>
+        <p style="color:#9b8878;margin-bottom:24px">Нажми на код — скопируется:</p>
+        <div onclick="navigator.clipboard.writeText('${code}').then(()=>{this.style.background='rgba(109,186,125,0.15)';this.style.borderColor='#6dba7d'})"
+             style="background:rgba(255,255,255,0.7);border:2px solid rgba(180,140,110,0.3);border-radius:16px;padding:16px;word-break:break-all;cursor:pointer;font-family:monospace;font-size:12px;color:#2d2118;backdrop-filter:blur(10px)">
           ${code}
         </div>
-        <p style="color:#888;font-size:12px;margin-top:12px">Нажми на код — скопируется автоматически</p>
       </div>`;
     history.replaceState({}, '', window.location.pathname);
   }
 })();
 
-// Telegram WebApp init
+// Telegram WebApp
 if (window.Telegram?.WebApp) {
   Telegram.WebApp.ready();
   Telegram.WebApp.expand();
@@ -285,64 +407,57 @@ document.getElementById('current-date').textContent = now.toLocaleDateString('ru
   weekday: 'long', day: 'numeric', month: 'long'
 });
 
-// Форматирование
-function fmt(n, currency = '₽') {
-  return n.toLocaleString('ru') + ' ' + currency;
+function fmt(n) {
+  return n.toLocaleString('ru') + ' ₽';
 }
 
-// Рендер счетов
 function renderAccounts() {
   const grid = document.getElementById('accounts-grid');
   grid.innerHTML = '';
   let total = 0;
   ACCOUNTS.forEach(acc => {
-    total += acc.currency === '₽' ? acc.balance : 0;
+    total += acc.balance;
     const card = document.createElement('div');
     card.className = 'account-card';
-    card.style.background = acc.color;
-    if (acc.textColor) { card.style.color = acc.textColor; }
     card.innerHTML = `
-      <div class="bank-letter" style="background:${acc.letterBg || 'rgba(255,255,255,0.2)'};color:${acc.textColor || '#fff'}">${acc.letter}</div>
+      <div class="bank-badge" style="background:${acc.color};color:${acc.textColor}">${acc.letter}</div>
       <div class="acc-info">
         <div class="acc-name">${acc.name}</div>
-        <div class="acc-currency" style="color:${acc.textColor ? acc.textColor+'99' : 'rgba(255,255,255,0.6)'}">${acc.currency}</div>
+        <div class="acc-type">Рублёвый счёт</div>
       </div>
-      <div class="acc-balance">${fmt(acc.balance, '')}</div>
+      <div class="acc-balance${acc.live ? ' live' : ''}">${fmt(acc.balance)}</div>
     `;
     grid.appendChild(card);
   });
   document.getElementById('total-balance').textContent = fmt(total);
-  const usd = ACCOUNTS.find(a => a.currency === '$');
-  if (usd && usd.balance > 0) {
-    document.getElementById('total-sub-text').textContent = `+ ${fmt(usd.balance, '$')}`;
-  }
 }
 
-// Рендер кредитов
 function renderCredits() {
   const list = document.getElementById('credits-list');
   list.innerHTML = '';
+  let total = 0;
   CREDITS.forEach(c => {
+    total += c.payment;
     const pct = c.total > 0 ? Math.round((1 - c.remaining / c.total) * 100) : 0;
     const item = document.createElement('div');
     item.className = 'credit-item';
     item.innerHTML = `
-      <div class="credit-icon" style="background:#2a1a1a">${c.icon}</div>
+      <div class="credit-icon">${c.icon}</div>
       <div class="credit-info">
-        <div class="credit-name">${c.name} <span style="color:#aaa;font-weight:400;font-size:12px">${c.bank}</span></div>
-        <div class="credit-sub">Остаток: ${fmt(c.remaining)}</div>
+        <div class="credit-name">${c.name}</div>
+        <div class="credit-bank">${c.bank}</div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
       </div>
       <div class="credit-amount">
         <div class="credit-payment">${fmt(c.payment)}/мес</div>
-        <div class="credit-remaining">${pct}% выплачено</div>
+        <div class="credit-pct">${pct}% выплачено</div>
       </div>
     `;
     list.appendChild(item);
   });
+  document.getElementById('credits-total').textContent = fmt(total);
 }
 
-// Рендер подписок
 function renderSubs() {
   const list = document.getElementById('subs-list');
   list.innerHTML = '';
@@ -352,16 +467,15 @@ function renderSubs() {
     const item = document.createElement('div');
     item.className = 'sub-item';
     item.innerHTML = `
-      <div class="sub-icon" style="background:#1a1a2e">${s.icon}</div>
+      <div class="sub-icon">${s.icon}</div>
       <div class="sub-name">${s.name}</div>
-      <div class="sub-price">${fmt(s.price, s.currency)}</div>
+      <div class="sub-price">${fmt(s.price)}</div>
     `;
     list.appendChild(item);
   });
   document.getElementById('subs-total').textContent = fmt(total);
 }
 
-// Навигация
 function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -374,7 +488,7 @@ renderAccounts();
 renderCredits();
 renderSubs();
 
-// Загружаем живой баланс ЮMoney из balance.json
+// Живой баланс ЮMoney
 fetch('./balance.json?t=' + Date.now())
   .then(r => r.json())
   .then(data => {
