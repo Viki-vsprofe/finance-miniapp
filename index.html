@@ -28,8 +28,8 @@ body {
   transition: background 0.4s ease;
 }
 body.dark-mode {
-  background: linear-gradient(160deg, #0a2320 0%, #0f2c28 55%, #0c2521 100%);
-  color: #e8f5f0;
+  background: linear-gradient(160deg, #e6e9e6 0%, #eaecea 55%, #e4e8e4 100%);
+  color: #1a2e1a;
 }
 body::before {
   content: '';
@@ -38,7 +38,7 @@ body::before {
   pointer-events: none; z-index: 0;
 }
 body.dark-mode::before {
-  background: radial-gradient(ellipse 130% 60% at 50% 115%, rgba(20,80,60,0.3), transparent);
+  background: radial-gradient(ellipse 130% 60% at 50% 115%, rgba(180,210,180,0.25), transparent);
 }
 body::after {
   content: '';
@@ -47,14 +47,14 @@ body::after {
   pointer-events: none; z-index: 0;
 }
 body.dark-mode::after {
-  background: radial-gradient(ellipse 100% 80% at 50% -20%, rgba(30,100,80,0.2), transparent);
+  background: radial-gradient(ellipse 100% 80% at 50% -20%, rgba(255,255,255,0.6), transparent);
 }
 
 .header { margin-bottom: 20px; position: relative; z-index: 1; }
 .header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; transition: color 0.3s; }
 .header .date { font-size: 13px; color: var(--text2); margin-top: 3px; transition: color 0.3s; }
-body.dark-mode .header h1 { color: #e8f5f0; }
-body.dark-mode .header .date { color: rgba(180,230,210,0.5); }
+body.dark-mode .header h1 { color: #1a2e1a; }
+body.dark-mode .header .date { color: rgba(60,100,60,0.55); }
 
 /* ── Финансы ── */
 .total-card {
@@ -201,6 +201,34 @@ body.dark-mode .header .date { color: rgba(180,230,210,0.5); }
 .m-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
 .m-val { font-size: 13px; font-weight: 600; color: rgba(220,248,235,0.9); min-width: 42px; text-align: right; }
 
+/* ── light-mode overrides for agent cards ── */
+body.dark-mode .sys-card {
+  background: rgba(255,255,255,0.72);
+  border-color: rgba(150,200,150,0.25);
+  box-shadow: 0 6px 24px rgba(80,140,80,0.1);
+}
+body.dark-mode .sys-headline { color: #1a3020; }
+body.dark-mode .sys-updated { color: rgba(60,100,60,0.45); }
+body.dark-mode .sched-lbl { color: rgba(60,100,60,0.55); }
+body.dark-mode .ss-box { background: rgba(0,0,0,0.04); }
+body.dark-mode .ss-label { color: rgba(60,100,60,0.5); }
+body.dark-mode .ss-val { color: #1a3020; }
+body.dark-mode .agent-row {
+  background: rgba(255,255,255,0.68);
+  border-color: rgba(150,200,150,0.2);
+  box-shadow: 6px 6px 18px rgba(160,190,160,0.25), -4px -4px 12px rgba(255,255,255,0.8);
+}
+body.dark-mode .agent-row.offline {
+  background: rgba(255,245,245,0.65);
+  border-color: rgba(200,150,150,0.18);
+}
+body.dark-mode .agent-name { color: #1a3020; }
+body.dark-mode .agent-role { color: rgba(60,100,60,0.48); }
+body.dark-mode .m-lbl { color: rgba(60,100,60,0.4); }
+body.dark-mode .m-bar { background: rgba(0,0,0,0.06); }
+body.dark-mode .m-val { color: #1a3020; }
+body.dark-mode .av-dot { border-color: rgba(220,235,220,0.9); }
+
 /* ── Навбар ── */
 .tabs {
   position: fixed; bottom: 0; left: 0; right: 0;
@@ -210,15 +238,15 @@ body.dark-mode .header .date { color: rgba(180,230,210,0.5); }
   display: flex; padding: 10px 0 24px; z-index: 100;
   transition: background 0.4s, border-color 0.4s;
 }
-body.dark-mode .tabs { background: rgba(8,28,25,0.9); border-top-color: rgba(60,120,100,0.18); }
+body.dark-mode .tabs { background: rgba(230,233,230,0.92); border-top-color: rgba(180,210,180,0.4); }
 .tab-btn {
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
   background: none; border: none; color: var(--text2); font-size: 10px; font-weight: 500;
   cursor: pointer; padding: 6px; transition: color 0.2s;
 }
-body.dark-mode .tab-btn { color: rgba(120,180,160,0.35); }
+body.dark-mode .tab-btn { color: rgba(80,120,80,0.45); }
 .tab-btn.active { color: var(--accent); }
-body.dark-mode .tab-btn.active { color: #6dba7d; }
+body.dark-mode .tab-btn.active { color: #3d8050; }
 .tab-btn .icon { font-size: 22px; }
 
 .page { display: none; position: relative; z-index: 1; }
@@ -498,6 +526,10 @@ function renderAgents(data) {
           <div class="m-dot" style="background:${stClr}"></div>
           <div class="m-lbl">Статус</div>
           <div class="m-val" style="color:${stClr}">${on ? 'Онлайн' : 'Офлайн'}</div>
+        </div>
+        <div class="m-row" style="margin-top:2px">
+          <div class="m-dot" style="background:rgba(150,150,150,0.4)"></div>
+          <div class="m-lbl" style="width:auto;flex:1;font-size:10px;opacity:0.55">активность ${timeSince(a.last_activity)}</div>
         </div>
       </div>`;
     list.appendChild(row);
