@@ -179,6 +179,12 @@ body.dark-mode .header .date { color: rgba(180,230,210,0.5); }
   display: flex; align-items: center; justify-content: center;
   flex-direction: column; gap: 3px;
 }
+.av-img {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(100,200,160,0.2);
+}
 .av-emoji { font-size: 30px; line-height: 1; }
 .av-dot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid rgba(10,35,30,0.8); }
 .av-dot.on { background: #6dba7d; box-shadow: 0 0 5px rgba(109,186,125,0.7); }
@@ -354,6 +360,11 @@ function showPage(name, btn, title) {
 })();
 
 // ══ Агенты ══
+const AVATARS = {
+  'Ариника':    './avatar-arinika.jpg',
+  'Заботушка':  './avatar-zabotushka.jpg',
+  'Копирайтер': './avatar-kopirayter.jpg',
+};
 // r=46 circ=289.0 | r=34 circ=213.6 | r=22 circ=138.2
 function arc(pct, circ) {
   const f = Math.max(0, Math.min(100, pct)) / 100 * circ;
@@ -422,7 +433,9 @@ function renderAgents(data) {
             style="filter:drop-shadow(0 0 4px ${stClr}99)"/>
         </svg>
         <div class="ring-avatar">
-          <div class="av-emoji">${a.icon}</div>
+          ${AVATARS[a.name]
+            ? `<img class="av-img" src="${AVATARS[a.name]}" alt="${a.name}">`
+            : `<div class="av-emoji">${a.icon}</div>`}
           <div class="av-dot ${on ? 'on' : 'off'}"></div>
         </div>
       </div>
