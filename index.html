@@ -437,10 +437,10 @@ function renderAgents(data) {
     const memPct = Math.min(100, (a.memory_mb || 0) / 500 * 100);
     const stPct  = on ? 100 : 0;
 
-    // Ring colors
-    const cpuClr  = '#6dba7d';
-    const memClr  = '#3d9e99';
-    const stClr   = on ? '#6dba7d' : '#c26b6b';
+    // Ring colors — dark green
+    const cpuClr  = '#2a6e45';
+    const memClr  = '#1a6b60';
+    const stClr   = on ? '#2a6e45' : '#8a3030';
 
     const uid = a.name.replace(/[^a-z]/gi,'').toLowerCase();
     const row = document.createElement('div');
@@ -450,19 +450,19 @@ function renderAgents(data) {
         <svg viewBox="0 0 120 120">
           <defs>
             <linearGradient id="gc-${uid}" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
-              <stop offset="0%" stop-color="#a8f0bf"/>
+              <stop offset="0%" stop-color="#4a9e65"/>
               <stop offset="45%" stop-color="${cpuClr}"/>
-              <stop offset="100%" stop-color="#2d6e47"/>
+              <stop offset="100%" stop-color="#0d3a22"/>
             </linearGradient>
             <linearGradient id="gm-${uid}" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
-              <stop offset="0%" stop-color="#90e0da"/>
+              <stop offset="0%" stop-color="#3a9090"/>
               <stop offset="45%" stop-color="${memClr}"/>
-              <stop offset="100%" stop-color="#1d6060"/>
+              <stop offset="100%" stop-color="#082e2a"/>
             </linearGradient>
             <linearGradient id="gs-${uid}" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
-              <stop offset="0%" stop-color="${on ? '#a8f0bf' : '#e8a0a0'}"/>
+              <stop offset="0%" stop-color="${on ? '#4a9e65' : '#a05050'}"/>
               <stop offset="45%" stop-color="${stClr}"/>
-              <stop offset="100%" stop-color="${on ? '#2d6e47' : '#7a3030'}"/>
+              <stop offset="100%" stop-color="${on ? '#0d3a22' : '#4a1010'}"/>
             </linearGradient>
             <filter id="fs-${uid}" x="-30%" y="-30%" width="160%" height="160%">
               <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="rgba(0,0,0,0.6)"/>
