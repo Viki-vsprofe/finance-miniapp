@@ -414,23 +414,63 @@ function renderAgents(data) {
     const memClr  = '#3d9e99';
     const stClr   = on ? '#6dba7d' : '#c26b6b';
 
+    const uid = a.name.replace(/[^a-z]/gi,'').toLowerCase();
     const row = document.createElement('div');
     row.className = 'agent-row' + (on ? '' : ' offline');
     row.innerHTML = `
       <div class="ring-wrap">
         <svg viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r="46" class="ring-track" stroke="${cpuClr}" stroke-width="7"/>
-          <circle cx="60" cy="60" r="34" class="ring-track" stroke="${memClr}" stroke-width="7"/>
-          <circle cx="60" cy="60" r="22" class="ring-track" stroke="${stClr}"  stroke-width="7"/>
-          <circle cx="60" cy="60" r="46" class="ring-arc" stroke="${cpuClr}" stroke-width="7"
+          <defs>
+            <linearGradient id="gc-${uid}" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="#a8f0bf"/>
+              <stop offset="45%" stop-color="${cpuClr}"/>
+              <stop offset="100%" stop-color="#2d6e47"/>
+            </linearGradient>
+            <linearGradient id="gm-${uid}" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="#90e0da"/>
+              <stop offset="45%" stop-color="${memClr}"/>
+              <stop offset="100%" stop-color="#1d6060"/>
+            </linearGradient>
+            <linearGradient id="gs-${uid}" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="${on ? '#a8f0bf' : '#e8a0a0'}"/>
+              <stop offset="45%" stop-color="${stClr}"/>
+              <stop offset="100%" stop-color="${on ? '#2d6e47' : '#7a3030'}"/>
+            </linearGradient>
+            <filter id="fs-${uid}" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="rgba(0,0,0,0.6)"/>
+            </filter>
+          </defs>
+          <!-- Recessed tracks -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="13"/>
+          <circle cx="60" cy="60" r="34" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="13"/>
+          <circle cx="60" cy="60" r="22" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="13"/>
+          <!-- Inner shadow on track -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
+          <circle cx="60" cy="60" r="34" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
+          <circle cx="60" cy="60" r="22" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
+          <!-- Progress arcs with gradient + shadow -->
+          <circle cx="60" cy="60" r="46" fill="none"
+            stroke="url(#gc-${uid})" stroke-width="11" stroke-linecap="round"
             stroke-dasharray="${arc(cpuPct, 289)}"
-            style="filter:drop-shadow(0 0 3px ${cpuClr}88)"/>
-          <circle cx="60" cy="60" r="34" class="ring-arc" stroke="${memClr}" stroke-width="7"
+            filter="url(#fs-${uid})"/>
+          <circle cx="60" cy="60" r="34" fill="none"
+            stroke="url(#gm-${uid})" stroke-width="11" stroke-linecap="round"
             stroke-dasharray="${arc(memPct, 213.6)}"
-            style="filter:drop-shadow(0 0 3px ${memClr}88)"/>
-          <circle cx="60" cy="60" r="22" class="ring-arc" stroke="${stClr}" stroke-width="7"
+            filter="url(#fs-${uid})"/>
+          <circle cx="60" cy="60" r="22" fill="none"
+            stroke="url(#gs-${uid})" stroke-width="11" stroke-linecap="round"
             stroke-dasharray="${arc(stPct, 138.2)}"
-            style="filter:drop-shadow(0 0 4px ${stClr}99)"/>
+            filter="url(#fs-${uid})"/>
+          <!-- Highlight gloss on filled arcs -->
+          <circle cx="60" cy="60" r="46" fill="none"
+            stroke="rgba(255,255,255,0.28)" stroke-width="3" stroke-linecap="round"
+            stroke-dasharray="${arc(cpuPct, 289)}"/>
+          <circle cx="60" cy="60" r="34" fill="none"
+            stroke="rgba(255,255,255,0.28)" stroke-width="3" stroke-linecap="round"
+            stroke-dasharray="${arc(memPct, 213.6)}"/>
+          <circle cx="60" cy="60" r="22" fill="none"
+            stroke="rgba(255,255,255,0.28)" stroke-width="3" stroke-linecap="round"
+            stroke-dasharray="${arc(stPct, 138.2)}"/>
         </svg>
         <div class="ring-avatar">
           ${AVATARS[a.name]
