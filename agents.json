@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-28T21:40:28Z",
+  "updated": "2026-07-28T21:40:58Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
@@ -15,7 +15,7 @@
       "icon": "🌸",
       "role": "Личный агент",
       "bot": "@VikiAITeambot",
-      "last_activity": "2026-07-28T21:40:28Z",
+      "last_activity": "2026-07-28T21:40:58Z",
       "status": "running",
       "pid": 1389914,
       "cpu": 0.4,
@@ -41,7 +41,7 @@
       "status": "running",
       "pid": 1797456,
       "cpu": 0.4,
-      "memory_mb": 50.0
+      "memory_mb": 49.8
     }
   ]
 }
