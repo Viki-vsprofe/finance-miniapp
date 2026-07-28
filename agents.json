@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-28T20:35:25Z",
+  "updated": "2026-07-28T20:35:55Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
@@ -15,11 +15,11 @@
       "icon": "🌸",
       "role": "Личный агент",
       "bot": "@VikiAITeambot",
-      "last_activity": "2026-07-28T20:35:25Z",
+      "last_activity": "2026-07-28T20:35:55Z",
       "status": "running",
       "pid": 1389914,
       "cpu": 0.4,
-      "memory_mb": 69.1
+      "memory_mb": 69.0
     },
     {
       "name": "Заботушка",
@@ -41,7 +41,7 @@
       "status": "running",
       "pid": 1797456,
       "cpu": 0.4,
-      "memory_mb": 49.8
+      "memory_mb": 49.6
     }
   ]
 }
