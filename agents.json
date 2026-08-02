@@ -1,10 +1,10 @@
 {
-  "updated": "2026-08-02T08:30:58Z",
-  "scheduler": "stopped",
+  "updated": "2026-08-02T10:45:27Z",
+  "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 3726,
-    "memory_pct": 95.3,
+    "memory_used_mb": 1845,
+    "memory_pct": 47.2,
     "disk_used": "33G",
     "disk_total": "59G",
     "disk_pct": "59"
@@ -15,11 +15,11 @@
       "icon": "🌸",
       "role": "Личный агент",
       "bot": "@VikiAITeambot",
-      "last_activity": "2026-08-02T08:30:37Z",
-      "status": "stopped",
-      "pid": null,
-      "cpu": 0,
-      "memory_mb": 0
+      "last_activity": "2026-08-02T10:45:27Z",
+      "status": "running",
+      "pid": 1007,
+      "cpu": 2.0,
+      "memory_mb": 82.1
     },
     {
       "name": "Заботушка",
@@ -27,10 +27,10 @@
       "role": "Личный уход",
       "bot": "@ZabotushkaBot",
       "last_activity": null,
-      "status": "stopped",
-      "pid": null,
-      "cpu": 0,
-      "memory_mb": 0
+      "status": "running",
+      "pid": 618,
+      "cpu": 0.0,
+      "memory_mb": 3.4
     },
     {
       "name": "Копирайтер",
@@ -38,10 +38,10 @@
       "role": "Контент и соцсети",
       "bot": "@VikaTehnoBot",
       "last_activity": "2026-07-26T12:56:56Z",
-      "status": "stopped",
-      "pid": null,
-      "cpu": 0,
-      "memory_mb": 0
+      "status": "running",
+      "pid": 984,
+      "cpu": 54.3,
+      "memory_mb": 145.4
     }
   ]
 }
