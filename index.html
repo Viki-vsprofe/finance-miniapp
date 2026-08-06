@@ -363,14 +363,17 @@ body.dark-mode .tab-btn.active { color: #3d8050; }
 </div>
 
 <script>
-if (window.Telegram?.WebApp) {
-  Telegram.WebApp.ready();
-  Telegram.WebApp.expand();
-  const uid = Telegram.WebApp.initDataUnsafe?.user?.id;
-  if (uid && uid !== 243667715) {
-    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#555;flex-direction:column;gap:12px"><div style="font-size:48px">🔒</div><div style="font-size:18px;font-weight:600">Доступ закрыт</div></div>';
-    throw new Error('access denied');
-  }
+const _ACCESS_BLOCK = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#555;flex-direction:column;gap:12px"><div style="font-size:48px">🔒</div><div style="font-size:18px;font-weight:600">Доступ закрыт</div></div>';
+if (!window.Telegram?.WebApp) {
+  document.body.innerHTML = _ACCESS_BLOCK;
+  throw new Error('access denied');
+}
+Telegram.WebApp.ready();
+Telegram.WebApp.expand();
+const uid = Telegram.WebApp.initDataUnsafe?.user?.id;
+if (!uid || uid !== 243667715) {
+  document.body.innerHTML = _ACCESS_BLOCK;
+  throw new Error('access denied');
 }
 
 document.getElementById('current-date').textContent =
