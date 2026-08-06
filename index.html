@@ -547,7 +547,7 @@ function renderAgents(data) {
   });
 }
 
-fetch('./agents.json?t=' + Date.now())
+fetch('https://raw.githubusercontent.com/Viki-vsprofe/finance-data/main/agents.json?t=' + Date.now(), {cache: 'no-store'})
   .then(r => r.json()).then(renderAgents)
   .catch(() => {
     document.getElementById('agents-headline').textContent = 'Нет данных';
@@ -628,7 +628,7 @@ function renderSubs() {
 
 renderAccounts(); renderCredits(); renderSubs();
 
-fetch('https://raw.githubusercontent.com/Viki-vsprofe/finance-miniapp/main/balance.json?t=' + Date.now(), {cache: 'no-store'})
+fetch('https://raw.githubusercontent.com/Viki-vsprofe/finance-data/main/balance.json?t=' + Date.now(), {cache: 'no-store'})
   .then(r => r.json())
   .then(data => {
     const b = data.balances || (data.balance !== undefined ? {'ЮMoney':data.balance} : {});
