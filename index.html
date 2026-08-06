@@ -628,7 +628,7 @@ function renderSubs() {
 
 renderAccounts(); renderCredits(); renderSubs();
 
-fetch('./balance.json?t=' + Date.now())
+fetch('./balance.json?t=' + Date.now(), {cache: 'no-store'})
   .then(r => r.json())
   .then(data => {
     const b = data.balances || (data.balance !== undefined ? {'ЮMoney':data.balance} : {});
