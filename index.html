@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<!-- built: 2026-08-06 --><title>Панель управления</title>
+<title>Панель управления</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -363,18 +363,7 @@ body.dark-mode .tab-btn.active { color: #3d8050; }
 </div>
 
 <script>
-const _ACCESS_BLOCK = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#555;flex-direction:column;gap:12px"><div style="font-size:48px">🔒</div><div style="font-size:18px;font-weight:600">Доступ закрыт</div></div>';
-if (!window.Telegram?.WebApp) {
-  document.body.innerHTML = _ACCESS_BLOCK;
-  throw new Error('access denied');
-}
-Telegram.WebApp.ready();
-Telegram.WebApp.expand();
-const uid = Telegram.WebApp.initDataUnsafe?.user?.id;
-if (!uid || uid !== 243667715) {
-  document.body.innerHTML = _ACCESS_BLOCK;
-  throw new Error('access denied');
-}
+if (window.Telegram?.WebApp) { Telegram.WebApp.ready(); Telegram.WebApp.expand(); }
 
 document.getElementById('current-date').textContent =
   new Date().toLocaleDateString('ru', { weekday:'long', day:'numeric', month:'long' });
@@ -547,7 +536,7 @@ function renderAgents(data) {
   });
 }
 
-fetch('https://raw.githubusercontent.com/Viki-vsprofe/finance-data/main/agents.json?t=' + Date.now(), {cache: 'no-store'})
+fetch('https://raw.githubusercontent.com/Viki-vsprofe/finance-data/main/agents.json?t=' + Date.now())
   .then(r => r.json()).then(renderAgents)
   .catch(() => {
     document.getElementById('agents-headline').textContent = 'Нет данных';
@@ -628,7 +617,7 @@ function renderSubs() {
 
 renderAccounts(); renderCredits(); renderSubs();
 
-fetch('https://raw.githubusercontent.com/Viki-vsprofe/finance-data/main/balance.json?t=' + Date.now(), {cache: 'no-store'})
+fetch('https://raw.githubusercontent.com/Viki-vsprofe/finance-data/main/balance.json?t=' + Date.now())
   .then(r => r.json())
   .then(data => {
     const b = data.balances || (data.balance !== undefined ? {'ЮMoney':data.balance} : {});
