@@ -1,10 +1,10 @@
 {
-  "updated": "2026-08-08T01:20:43Z",
+  "updated": "2026-08-08T01:25:13Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 1138,
-    "memory_pct": 29.1,
+    "memory_used_mb": 1099,
+    "memory_pct": 28.1,
     "disk_used": "34G",
     "disk_total": "59G",
     "disk_pct": "61"
@@ -15,11 +15,11 @@
       "icon": "🌸",
       "role": "Личный агент",
       "bot": "@VikiAITeambot",
-      "last_activity": "2026-08-08T01:20:43Z",
+      "last_activity": "2026-08-08T01:25:13Z",
       "status": "running",
       "pid": 67038,
       "cpu": 1.0,
-      "memory_mb": 74.7
+      "memory_mb": 74.6
     },
     {
       "name": "Заботушка",
