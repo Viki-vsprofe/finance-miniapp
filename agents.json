@@ -1,9 +1,9 @@
 {
-  "updated": "2026-08-08T00:25:40Z",
+  "updated": "2026-08-08T00:30:10Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 1103,
+    "memory_used_mb": 1104,
     "memory_pct": 28.2,
     "disk_used": "34G",
     "disk_total": "59G",
@@ -15,7 +15,7 @@
       "icon": "🌸",
       "role": "Личный агент",
       "bot": "@VikiAITeambot",
-      "last_activity": "2026-08-08T00:25:40Z",
+      "last_activity": "2026-08-08T00:30:10Z",
       "status": "running",
       "pid": 67038,
       "cpu": 1.2,
