@@ -1,9 +1,9 @@
 {
-  "updated": "2026-08-08T21:45:49Z",
+  "updated": "2026-08-08T21:50:19Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 1455,
+    "memory_used_mb": 1456,
     "memory_pct": 37.2,
     "disk_used": "34G",
     "disk_total": "59G",
@@ -15,7 +15,7 @@
       "icon": "🌸",
       "role": "Личный агент",
       "bot": "@VikiAITeambot",
-      "last_activity": "2026-08-08T21:45:49Z",
+      "last_activity": "2026-08-08T21:50:19Z",
       "status": "running",
       "pid": 67038,
       "cpu": 0.4,
@@ -41,7 +41,7 @@
       "status": "running",
       "pid": 127269,
       "cpu": 0.2,
-      "memory_mb": 89.2
+      "memory_mb": 89.3
     }
   ]
 }
