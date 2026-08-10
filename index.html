@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Боты</title>
+<title>Панель управления</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -536,12 +536,16 @@ function renderAgents(data) {
   });
 }
 
-fetch('https://raw.githubusercontent.com/Viki-vsprofe/finance-data/main/agents.json?t=' + Date.now())
-  .then(r => r.json()).then(renderAgents)
-  .catch(() => {
-    document.getElementById('agents-headline').textContent = 'Нет данных';
-    document.getElementById('agents-updated').textContent = 'Не удалось загрузить';
-  });
+function loadAgents() {
+  fetch('./agents.json?t=' + Date.now())
+    .then(r => r.json()).then(renderAgents)
+    .catch(() => {
+      document.getElementById('agents-headline').textContent = 'Нет данных';
+      document.getElementById('agents-updated').textContent = 'Не удалось загрузить';
+    });
+}
+loadAgents();
+setInterval(loadAgents, 60000);
 
 // ══ Финансы ══
 const ACCOUNTS = [
@@ -617,19 +621,23 @@ function renderSubs() {
 
 renderAccounts(); renderCredits(); renderSubs();
 
-fetch('https://raw.githubusercontent.com/Viki-vsprofe/finance-data/main/balance.json?t=' + Date.now())
-  .then(r => r.json())
-  .then(data => {
-    const b = data.balances || (data.balance !== undefined ? {'ЮMoney':data.balance} : {});
-    ACCOUNTS.forEach((acc,i) => { if (b[acc.name] !== undefined) ACCOUNTS[i].balance = b[acc.name]; });
-    renderAccounts();
-    if (data.loans) {
-      if (data.loans.loan_zaem !== undefined)      CREDITS[0].remaining = data.loans.loan_zaem;
-      if (data.loans.loan_kredit !== undefined)    CREDITS[1].remaining = data.loans.loan_kredit;
-      if (data.loans.loan_rassrochka !== undefined) CREDITS[2].remaining = data.loans.loan_rassrochka;
-      renderCredits();
-    }
-  }).catch(()=>{});
+function loadBalance() {
+  fetch('./balance.json?t=' + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      const b = data.balances || (data.balance !== undefined ? {'ЮMoney':data.balance} : {});
+      ACCOUNTS.forEach((acc,i) => { if (b[acc.name] !== undefined) ACCOUNTS[i].balance = b[acc.name]; });
+      renderAccounts();
+      if (data.loans) {
+        if (data.loans.loan_zaem !== undefined)      CREDITS[0].remaining = data.loans.loan_zaem;
+        if (data.loans.loan_kredit !== undefined)    CREDITS[1].remaining = data.loans.loan_kredit;
+        if (data.loans.loan_rassrochka !== undefined) CREDITS[2].remaining = data.loans.loan_rassrochka;
+        renderCredits();
+      }
+    }).catch(()=>{});
+}
+loadBalance();
+setInterval(loadBalance, 60000);
 </script>
 </body>
 </html>
