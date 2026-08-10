@@ -1,1 +1,646 @@
-<html><body>TEST OK</body></html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Панель управления</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg1: #ddd6c8; --bg2: #c9c0b2;
+  --glass: rgba(255,252,244,0.72); --glass2: rgba(255,252,244,0.50);
+  --border: rgba(255,248,232,0.85);
+  --text: #2c2416; --text2: #8a7a62;
+  --accent: #c8963a; --accent2: #6bb5b5;
+  --red: #c26b6b; --green: #6dba7d;
+  --shadow: rgba(90,70,40,0.13);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(160deg, #ddd8cd 0%, #c9c2b6 45%, #d3cec8 100%);
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px 16px 90px;
+  transition: background 0.4s ease;
+}
+body.dark-mode {
+  background: linear-gradient(160deg, #e8f2ec 0%, #eaf5ee 55%, #e4f0ea 100%);
+  color: #1a2e1a;
+}
+body::before {
+  content: '';
+  position: fixed; bottom: 0; left: 0; right: 0; height: 45%;
+  background: radial-gradient(ellipse 130% 60% at 50% 115%, rgba(160,150,132,0.38), transparent);
+  pointer-events: none; z-index: 0;
+}
+body.dark-mode::before {
+  background: radial-gradient(ellipse 130% 60% at 50% 115%, rgba(150,200,160,0.2), transparent);
+}
+body::after {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; height: 35%;
+  background: radial-gradient(ellipse 100% 80% at 50% -20%, rgba(240,232,218,0.45), transparent);
+  pointer-events: none; z-index: 0;
+}
+body.dark-mode::after {
+  background: radial-gradient(ellipse 100% 80% at 50% -20%, rgba(255,255,255,0.6), transparent);
+}
+
+.header { margin-bottom: 20px; position: relative; z-index: 1; }
+.header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; transition: color 0.3s; }
+.header .date { font-size: 13px; color: var(--text2); margin-top: 3px; transition: color 0.3s; }
+body.dark-mode .header h1 { color: #1a2e1a; }
+body.dark-mode .header .date { color: rgba(60,100,60,0.55); }
+
+/* ── Финансы ── */
+.total-card {
+  background: linear-gradient(145deg, #3b3825 0%, #504b34 55%, #3a3622 100%);
+  border-radius: 28px; padding: 32px 24px 28px; margin-bottom: 22px;
+  text-align: center; position: relative; z-index: 1;
+  box-shadow: 0 16px 40px rgba(40,35,15,0.35); overflow: hidden;
+}
+.total-card::before {
+  content: ''; position: absolute; bottom: -10px; left: -20px; right: -20px; height: 60%;
+  background: radial-gradient(ellipse 120% 80% at 50% 120%, rgba(120,110,75,0.5) 0%, transparent 70%);
+}
+.total-card::after {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 15% 25%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px at 55% 12%, rgba(255,255,255,0.75), transparent),
+    radial-gradient(2px 2px at 82% 35%, rgba(255,255,255,0.85), transparent),
+    radial-gradient(1px 1px at 30% 65%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 70% 70%, rgba(255,255,255,0.7), transparent);
+}
+.total-label { font-size: 12px; color: rgba(255,245,210,0.6); margin-bottom: 10px; letter-spacing: 1.5px; text-transform: uppercase; position: relative; z-index: 1; }
+.total-amount { font-size: 42px; font-weight: 700; color: #fff8e8; letter-spacing: -1.5px; position: relative; z-index: 1; }
+.total-sub { font-size: 12px; color: rgba(255,245,210,0.5); margin-top: 10px; position: relative; z-index: 1; }
+
+.section-title { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.accounts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; position: relative; z-index: 1; }
+.account-card { background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 4px 16px var(--shadow); }
+.account-card.wide { grid-column: span 2; flex-direction: row; align-items: center; gap: 12px; }
+.bank-badge { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; flex-shrink: 0; box-shadow: 0 3px 10px rgba(0,0,0,0.12); }
+.acc-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.acc-balance { font-size: 15px; font-weight: 700; color: var(--text); }
+.account-card.wide .acc-balance { text-align: right; font-size: 16px; }
+.acc-credit { font-size: 11px; font-weight: 600; color: var(--red); display: flex; align-items: center; gap: 4px; }
+.acc-credit-name { font-weight: 400; color: var(--text2); font-size: 10px; }
+.obligations-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; position: relative; z-index: 1; }
+.obligation-card { background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 16px; padding: 12px; box-shadow: 0 4px 16px var(--shadow); }
+.obl-icon { font-size: 20px; margin-bottom: 6px; }
+.obl-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+.obl-amount { font-size: 16px; font-weight: 700; }
+.obl-sub { font-size: 10px; color: var(--text2); margin-top: 2px; }
+.total-expenses-card {
+  background: linear-gradient(135deg, rgba(60,55,30,0.85), rgba(80,72,42,0.85));
+  backdrop-filter: blur(16px); border: 1px solid rgba(255,240,180,0.15); border-radius: 18px;
+  padding: 16px 20px; margin-top: 8px; position: relative; z-index: 1;
+  box-shadow: 0 6px 20px rgba(40,35,15,0.25);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.te-left { flex: 1; min-width: 0; }
+.te-label { font-size: 11px; color: rgba(255,240,190,0.6); letter-spacing: 0.3px; margin-bottom: 3px; }
+.te-breakdown { font-size: 10px; color: rgba(255,240,190,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.te-amount { font-size: 22px; font-weight: 700; color: #fff8e8; white-space: nowrap; flex-shrink: 0; }
+
+.credits-list { margin-bottom: 24px; position: relative; z-index: 1; }
+.credit-item { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 18px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 16px var(--shadow); }
+.credit-icon { width: 42px; height: 42px; border-radius: 14px; background: rgba(194,107,107,0.12); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.credit-info { flex: 1; }
+.credit-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.credit-bank { font-size: 12px; color: var(--text2); margin-top: 1px; }
+.credit-amount { text-align: right; }
+.credit-payment { font-size: 15px; font-weight: 700; color: var(--red); }
+.credit-pct { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.progress-bar { height: 4px; background: rgba(0,0,0,0.08); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #c26b6b, #d4947a); }
+.credits-total { background: var(--glass2); border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
+.credits-total-label { font-size: 13px; color: var(--text2); }
+.credits-total-amount { font-size: 15px; font-weight: 700; color: var(--red); }
+
+.subs-list { margin-bottom: 12px; position: relative; z-index: 1; }
+.sub-item { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 16px; padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; box-shadow: 0 3px 12px var(--shadow); }
+.sub-icon { width: 38px; height: 38px; border-radius: 12px; background: rgba(168,123,212,0.12); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.sub-name { font-size: 14px; font-weight: 600; flex: 1; color: var(--text); }
+.sub-price { font-size: 14px; font-weight: 600; color: var(--text2); }
+.subs-total { background: var(--glass2); border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); position: relative; z-index: 1; }
+.subs-total-label { font-size: 13px; color: var(--text2); }
+.subs-total-amount { font-size: 15px; font-weight: 700; color: var(--accent2); }
+
+/* ══ АГЕНТЫ — тёмный тил ══ */
+.sys-card {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(100,200,160,0.16);
+  border-radius: 22px; padding: 16px 20px; margin-bottom: 16px;
+  position: relative; z-index: 1;
+}
+.sys-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+.sys-headline { font-size: 19px; font-weight: 700; color: #d0f0e4; letter-spacing: -0.3px; }
+.sys-updated { font-size: 11px; color: rgba(150,220,190,0.45); margin-top: 3px; }
+.sys-sched { display: flex; align-items: center; gap: 6px; }
+.sched-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sched-dot.on { background: #6dba7d; box-shadow: 0 0 6px rgba(109,186,125,0.6); }
+.sched-dot.off { background: #c26b6b; }
+.sched-lbl { font-size: 12px; color: rgba(150,220,190,0.55); }
+.sys-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ss-box { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 8px 12px; }
+.ss-label { font-size: 10px; color: rgba(150,220,190,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.ss-row { display: flex; align-items: center; gap: 8px; }
+.ss-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+.ss-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #3d9e8c, #6dba7d); transition: width 0.6s ease; }
+.ss-fill.warn { background: linear-gradient(90deg, #c26b6b, #d4947a); }
+.ss-val { font-size: 13px; font-weight: 700; color: rgba(200,240,220,0.9); white-space: nowrap; }
+
+/* Карточка агента */
+.agent-row {
+  display: flex; align-items: center; gap: 18px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(100,200,160,0.12);
+  border-radius: 24px; padding: 18px 16px 18px 18px; margin-bottom: 12px;
+  position: relative; z-index: 1;
+}
+.agent-row.offline { border-color: rgba(194,107,107,0.15); background: rgba(194,107,107,0.04); }
+
+/* SVG кольца */
+.ring-wrap { position: relative; width: 114px; height: 114px; flex-shrink: 0; }
+.ring-wrap svg { width: 114px; height: 114px; transform: rotate(-90deg); overflow: visible; }
+.ring-track { fill: none; opacity: 0.09; }
+.ring-arc { fill: none; stroke-linecap: round; }
+
+.ring-avatar {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 3px;
+}
+.av-img {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(100,200,160,0.2);
+}
+.av-emoji { font-size: 30px; line-height: 1; }
+.av-dot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid rgba(10,35,30,0.8); }
+.av-dot.on { background: #6dba7d; box-shadow: 0 0 5px rgba(109,186,125,0.7); }
+.av-dot.off { background: #c26b6b; }
+
+/* Метрики */
+.agent-meta { flex: 1; min-width: 0; }
+.agent-name { font-size: 17px; font-weight: 700; color: #d8f0e8; letter-spacing: -0.2px; }
+.agent-role { font-size: 12px; color: rgba(150,220,190,0.45); margin-bottom: 13px; }
+.m-row { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+.m-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.m-lbl { font-size: 11px; color: rgba(150,220,190,0.4); width: 52px; flex-shrink: 0; }
+.m-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+.m-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+.m-val { font-size: 13px; font-weight: 600; color: rgba(220,248,235,0.9); min-width: 42px; text-align: right; }
+
+/* ── dark green cards on light sage bg ── */
+body.dark-mode .sys-card {
+  background: #1e4d2e;
+  border-color: rgba(80,160,100,0.3);
+  box-shadow: 0 8px 32px rgba(10,40,20,0.2);
+}
+body.dark-mode .sys-headline { color: #e8f8ee; }
+body.dark-mode .sys-updated { color: rgba(180,230,190,0.5); }
+body.dark-mode .sched-lbl { color: rgba(180,230,190,0.55); }
+body.dark-mode .ss-box { background: rgba(255,255,255,0.07); }
+body.dark-mode .ss-label { color: rgba(180,230,190,0.5); }
+body.dark-mode .ss-val { color: #e8f8ee; }
+body.dark-mode .agent-row {
+  background: #1e4d2e;
+  border-color: rgba(80,160,100,0.25);
+  box-shadow: 0 8px 32px rgba(10,40,20,0.18);
+}
+body.dark-mode .agent-row.offline {
+  background: #3d1e1e;
+  border-color: rgba(160,80,80,0.25);
+}
+body.dark-mode .agent-name { color: #e8f8ee; }
+body.dark-mode .agent-role { color: rgba(180,230,190,0.48); }
+body.dark-mode .m-lbl { color: rgba(180,230,190,0.42); }
+body.dark-mode .m-bar { background: rgba(255,255,255,0.09); }
+body.dark-mode .m-val { color: #e8f8ee; }
+body.dark-mode .av-dot { border-color: rgba(20,60,30,0.9); }
+
+/* ── Навбар ── */
+.tabs {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(220,212,200,0.88);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid rgba(255,250,238,0.6);
+  display: flex; padding: 10px 0 24px; z-index: 100;
+  transition: background 0.4s, border-color 0.4s;
+}
+body.dark-mode .tabs { background: rgba(230,233,230,0.92); border-top-color: rgba(180,210,180,0.4); }
+.tab-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: none; border: none; color: var(--text2); font-size: 10px; font-weight: 500;
+  cursor: pointer; padding: 6px; transition: color 0.2s;
+}
+body.dark-mode .tab-btn { color: rgba(80,120,80,0.45); }
+.tab-btn.active { color: var(--accent); }
+body.dark-mode .tab-btn.active { color: #3d8050; }
+.tab-btn .icon { font-size: 22px; }
+
+.page { display: none; position: relative; z-index: 1; }
+.page.active { display: block; }
+</style>
+</head>
+<body class="dark-mode">
+
+<div class="header">
+  <h1 id="page-title">🤖 Команда</h1>
+  <div class="date" id="current-date"></div>
+</div>
+
+<!-- АГЕНТЫ -->
+<div class="page active" id="page-agents">
+  <div class="sys-card">
+    <div class="sys-top">
+      <div>
+        <div class="sys-headline" id="agents-headline">— агентов онлайн</div>
+        <div class="sys-updated" id="agents-updated">загрузка...</div>
+      </div>
+      <div class="sys-sched">
+        <div class="sched-dot" id="sched-dot"></div>
+        <div class="sched-lbl" id="sched-lbl">планировщик</div>
+      </div>
+    </div>
+    <div class="sys-stats">
+      <div class="ss-box">
+        <div class="ss-label">Память</div>
+        <div class="ss-row">
+          <div class="ss-bar"><div class="ss-fill" id="mem-fill" style="width:0%"></div></div>
+          <div class="ss-val" id="mem-val">—</div>
+        </div>
+      </div>
+      <div class="ss-box">
+        <div class="ss-label">Диск</div>
+        <div class="ss-row">
+          <div class="ss-bar"><div class="ss-fill" id="disk-fill" style="width:0%"></div></div>
+          <div class="ss-val" id="disk-val">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="agents-list"></div>
+</div>
+
+<!-- СЧЕТА -->
+<div class="page" id="page-accounts">
+  <div class="total-card">
+    <div class="total-label">Общий баланс</div>
+    <div class="total-amount" id="total-balance">0 ₽</div>
+    <div class="total-sub"></div>
+  </div>
+  <div class="section-title">Счета</div>
+  <div class="accounts-grid" id="accounts-grid"></div>
+  <div class="section-title">Ежемесячные обязательства</div>
+  <div class="obligations-grid">
+    <div class="obligation-card">
+      <div class="obl-icon">💳</div>
+      <div class="obl-label">Кредиты и займы</div>
+      <div class="obl-amount" style="color:var(--red)" id="credits-summary-total">16 514 ₽</div>
+      <div class="obl-sub">в месяц</div>
+    </div>
+    <div class="obligation-card">
+      <div class="obl-icon">🔄</div>
+      <div class="obl-label">Подписки</div>
+      <div class="obl-amount" style="color:var(--accent2)" id="subs-summary-total">0 ₽</div>
+      <div class="obl-sub">в месяц</div>
+    </div>
+  </div>
+  <div class="total-expenses-card">
+    <div class="te-left">
+      <div class="te-label">Итого расходов в месяц</div>
+      <div class="te-breakdown" id="total-expenses-breakdown"></div>
+    </div>
+    <div class="te-amount" id="total-expenses">0 ₽</div>
+  </div>
+</div>
+
+<!-- КРЕДИТЫ -->
+<div class="page" id="page-credits">
+  <div class="section-title" style="margin-bottom:16px">Кредиты и займы</div>
+  <div class="credits-list" id="credits-list"></div>
+  <div class="credits-total">
+    <span class="credits-total-label">Итого в месяц</span>
+    <span class="credits-total-amount" id="credits-total">0 ₽</span>
+  </div>
+</div>
+
+<!-- ПОДПИСКИ -->
+<div class="page" id="page-subs">
+  <div class="section-title" style="margin-bottom:16px">Ежемесячные подписки</div>
+  <div class="subs-list" id="subs-list"></div>
+  <div class="subs-total">
+    <span class="subs-total-label">Итого в месяц</span>
+    <span class="subs-total-amount" id="subs-total">0 ₽</span>
+  </div>
+</div>
+
+<!-- НАВБАР -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showPage('agents',this,'🤖 Команда')">
+    <span class="icon">🤖</span>Агенты
+  </button>
+  <button class="tab-btn" onclick="showPage('accounts',this,'💰 Финансы')">
+    <span class="icon">🏦</span>Счета
+  </button>
+  <button class="tab-btn" onclick="showPage('credits',this,'💳 Кредиты')">
+    <span class="icon">💳</span>Кредиты
+  </button>
+  <button class="tab-btn" onclick="showPage('subs',this,'🔄 Подписки')">
+    <span class="icon">🔄</span>Подписки
+  </button>
+</div>
+
+<script>
+if (window.Telegram?.WebApp) { Telegram.WebApp.ready(); Telegram.WebApp.expand(); }
+
+document.getElementById('current-date').textContent =
+  new Date().toLocaleDateString('ru', { weekday:'long', day:'numeric', month:'long' });
+
+function fmt(n) { return n.toLocaleString('ru') + ' ₽'; }
+
+function showPage(name, btn, title) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('page-title').textContent = title;
+  document.body.classList.toggle('dark-mode', name === 'agents');
+}
+
+// ══ OAuth ══
+(function(){
+  const code = new URLSearchParams(window.location.search).get('code');
+  if (!code) return;
+  document.body.innerHTML = `<div style="font-family:sans-serif;text-align:center;padding:60px 24px;background:linear-gradient(145deg,#0a2320,#0f2c28);min-height:100vh;color:#d0f0e4"><h2 style="color:#6dba7d;margin-bottom:16px">✅ Авторизация!</h2><p style="margin-bottom:24px;opacity:.6">Нажми — скопируется:</p><div onclick="navigator.clipboard.writeText('${code}').then(()=>this.style.borderColor='#6dba7d')" style="background:rgba(255,255,255,0.06);border:2px solid rgba(100,200,160,0.2);border-radius:16px;padding:16px;word-break:break-all;cursor:pointer;font-family:monospace;font-size:12px">${code}</div></div>`;
+  history.replaceState({}, '', window.location.pathname);
+})();
+
+// ══ Агенты ══
+const AVATARS = {
+  'Ариника':    './avatar-arinika.jpg',
+  'Заботушка':  './avatar-zabotushka.jpg',
+  'Копирайтер': './avatar-kopirayter.jpg',
+};
+// r=46 circ=289.0 | r=34 circ=213.6 | r=22 circ=138.2
+function arc(pct, circ) {
+  const f = Math.max(0, Math.min(100, pct)) / 100 * circ;
+  return `${f.toFixed(1)} ${circ}`;
+}
+function timeSince(iso) {
+  if (!iso) return '—';
+  const s = Math.floor((Date.now() - new Date(iso)) / 1000);
+  if (s < 60) return s + ' сек назад';
+  if (s < 3600) return Math.floor(s/60) + ' мин назад';
+  return Math.floor(s/3600) + ' ч назад';
+}
+
+function renderAgents(data) {
+  const running = data.agents.filter(a => a.status === 'running').length;
+  document.getElementById('agents-headline').textContent = `${running} из ${data.agents.length} онлайн`;
+  document.getElementById('agents-updated').textContent = 'Обновлено ' + timeSince(data.updated);
+
+  const dot = document.getElementById('sched-dot');
+  const lbl = document.getElementById('sched-lbl');
+  if (data.scheduler === 'running') { dot.className = 'sched-dot on'; lbl.textContent = 'Планировщик'; }
+  else { dot.className = 'sched-dot off'; lbl.textContent = 'Не запущен'; }
+
+  if (data.system) {
+    const mp = data.system.memory_pct || 0;
+    const dp = parseInt(data.system.disk_pct) || 0;
+    const mf = document.getElementById('mem-fill');
+    const df = document.getElementById('disk-fill');
+    mf.style.width = mp + '%';
+    mf.className = 'ss-fill' + (mp > 80 ? ' warn' : '');
+    document.getElementById('mem-val').textContent = mp + '%';
+    df.style.width = dp + '%';
+    df.className = 'ss-fill' + (dp > 80 ? ' warn' : '');
+    document.getElementById('disk-val').textContent = dp + '%';
+  }
+
+  const list = document.getElementById('agents-list');
+  list.innerHTML = '';
+  data.agents.forEach(a => {
+    const on = a.status === 'running';
+    const cpuPct = Math.min(100, a.cpu || 0);
+    const memPct = Math.min(100, (a.memory_mb || 0) / 500 * 100);
+    const stPct  = on ? 100 : 0;
+
+    // Ring colors — dark green
+    const cpuClr  = '#2a6e45';
+    const memClr  = '#1a6b60';
+    const stClr   = on ? '#2a6e45' : '#8a3030';
+
+    const uid = a.name.replace(/[^a-z]/gi,'').toLowerCase();
+    const row = document.createElement('div');
+    row.className = 'agent-row' + (on ? '' : ' offline');
+    row.innerHTML = `
+      <div class="ring-wrap">
+        <svg viewBox="0 0 120 120">
+          <defs>
+            <linearGradient id="gc-${uid}" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="#4a9e65"/>
+              <stop offset="45%" stop-color="${cpuClr}"/>
+              <stop offset="100%" stop-color="#0d3a22"/>
+            </linearGradient>
+            <linearGradient id="gm-${uid}" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="#3a9090"/>
+              <stop offset="45%" stop-color="${memClr}"/>
+              <stop offset="100%" stop-color="#082e2a"/>
+            </linearGradient>
+            <linearGradient id="gs-${uid}" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="${on ? '#4a9e65' : '#a05050'}"/>
+              <stop offset="45%" stop-color="${stClr}"/>
+              <stop offset="100%" stop-color="${on ? '#0d3a22' : '#4a1010'}"/>
+            </linearGradient>
+            <filter id="fs-${uid}" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="rgba(0,0,0,0.6)"/>
+            </filter>
+          </defs>
+          <!-- Recessed tracks -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="13"/>
+          <circle cx="60" cy="60" r="34" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="13"/>
+          <circle cx="60" cy="60" r="22" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="13"/>
+          <!-- Inner shadow on track -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
+          <circle cx="60" cy="60" r="34" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
+          <circle cx="60" cy="60" r="22" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
+          <!-- Progress arcs with gradient + shadow -->
+          <circle cx="60" cy="60" r="46" fill="none"
+            stroke="url(#gc-${uid})" stroke-width="11" stroke-linecap="round"
+            stroke-dasharray="${arc(cpuPct, 289)}"
+            filter="url(#fs-${uid})"/>
+          <circle cx="60" cy="60" r="34" fill="none"
+            stroke="url(#gm-${uid})" stroke-width="11" stroke-linecap="round"
+            stroke-dasharray="${arc(memPct, 213.6)}"
+            filter="url(#fs-${uid})"/>
+          <circle cx="60" cy="60" r="22" fill="none"
+            stroke="url(#gs-${uid})" stroke-width="11" stroke-linecap="round"
+            stroke-dasharray="${arc(stPct, 138.2)}"
+            filter="url(#fs-${uid})"/>
+          <!-- Highlight gloss on filled arcs -->
+          <circle cx="60" cy="60" r="46" fill="none"
+            stroke="rgba(255,255,255,0.28)" stroke-width="3" stroke-linecap="round"
+            stroke-dasharray="${arc(cpuPct, 289)}"/>
+          <circle cx="60" cy="60" r="34" fill="none"
+            stroke="rgba(255,255,255,0.28)" stroke-width="3" stroke-linecap="round"
+            stroke-dasharray="${arc(memPct, 213.6)}"/>
+          <circle cx="60" cy="60" r="22" fill="none"
+            stroke="rgba(255,255,255,0.28)" stroke-width="3" stroke-linecap="round"
+            stroke-dasharray="${arc(stPct, 138.2)}"/>
+        </svg>
+        <div class="ring-avatar">
+          ${AVATARS[a.name]
+            ? `<img class="av-img" src="${AVATARS[a.name]}" alt="${a.name}">`
+            : `<div class="av-emoji">${a.icon}</div>`}
+          <div class="av-dot ${on ? 'on' : 'off'}"></div>
+        </div>
+      </div>
+      <div class="agent-meta">
+        <div class="agent-name">${a.name}</div>
+        <div class="agent-role">${a.role}</div>
+        <div class="m-row">
+          <div class="m-dot" style="background:${cpuClr}"></div>
+          <div class="m-lbl">CPU</div>
+          <div class="m-bar"><div class="m-fill" style="width:${cpuPct}%;background:linear-gradient(90deg,#3d9e6c,${cpuClr})"></div></div>
+          <div class="m-val">${a.cpu || 0}%</div>
+        </div>
+        <div class="m-row">
+          <div class="m-dot" style="background:${memClr}"></div>
+          <div class="m-lbl">Память</div>
+          <div class="m-bar"><div class="m-fill" style="width:${memPct.toFixed(0)}%;background:linear-gradient(90deg,#2d7a7a,${memClr})"></div></div>
+          <div class="m-val">${a.memory_mb || 0} МБ</div>
+        </div>
+        <div class="m-row">
+          <div class="m-dot" style="background:${stClr}"></div>
+          <div class="m-lbl">Статус</div>
+          <div class="m-val" style="color:${stClr}">${on ? 'Онлайн' : 'Офлайн'}</div>
+        </div>
+        <div class="m-row" style="margin-top:2px">
+          <div class="m-dot" style="background:rgba(150,150,150,0.4)"></div>
+          <div class="m-lbl" style="width:auto;flex:1;font-size:10px;opacity:0.55">активность ${timeSince(a.last_activity)}</div>
+        </div>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function loadAgents() {
+  fetch('https://api.github.com/repos/Viki-vsprofe/finance-miniapp/contents/agents.json')
+    .then(r => r.json())
+    .then(r => JSON.parse(atob(r.content.replace(/\n/g,''))))
+    .then(renderAgents)
+    .catch(() => {
+      document.getElementById('agents-headline').textContent = 'Нет данных';
+      document.getElementById('agents-updated').textContent = 'Не удалось загрузить';
+    });
+}
+loadAgents();
+setInterval(loadAgents, 60000);
+
+// ══ Финансы ══
+const ACCOUNTS = [
+  { name:"Сбер (Visa)", letter:"С", color:"#21A038", textColor:"#fff", balance:0 },
+  { name:"Т-Банк",      letter:"Т", color:"#FFDD2D", textColor:"#111", balance:0 },
+  { name:"Сбер (МИР)",  letter:"С", color:"#21A038", textColor:"#fff", balance:0 },
+  { name:"Халва",       letter:"Х", color:"#7B3FA0", textColor:"#fff", balance:0 },
+  { name:"ВТБ",         letter:"В", color:"#009FDF", textColor:"#fff", balance:0 },
+  { name:"ЮMoney",      letter:"Ю", color:"#5C16C5", textColor:"#fff", balance:0 },
+];
+const CREDITS = [
+  { name:"Заём",      bank:"Т-Банк", icon:"💳", payment:9020, remaining:0, total:150000 },
+  { name:"Кредит",    bank:"Т-Банк", icon:"💳", payment:3340, remaining:0, total:18500 },
+  { name:"Рассрочка", bank:"Халва",  icon:"🛒", payment:4154, remaining:0, total:43500 },
+];
+const SUBS = [
+  { name:"ВИП",               icon:"⭐", price:3500 },
+  { name:"ИИ Клод",           icon:"🤖", price:2000 },
+  { name:"Виртуальная карта", icon:"💳", price:690  },
+  { name:"Билайн (мой)",      icon:"📱", price:550  },
+  { name:"Билайн (дочь)",     icon:"📶", price:350  },
+  { name:"Сервер",            icon:"🖥️", price:400  },
+  { name:"Мари Клаб",         icon:"🎓", price:1300 },
+];
+
+function renderAccounts() {
+  const grid = document.getElementById('accounts-grid'); grid.innerHTML = '';
+  let total = 0;
+  const cb = {};
+  CREDITS.forEach(c => { if (!cb[c.bank]) cb[c.bank] = []; cb[c.bank].push(c); });
+  ACCOUNTS.forEach((acc, i) => {
+    total += acc.balance;
+    const card = document.createElement('div');
+    const isLast = i === ACCOUNTS.length - 1;
+    card.className = 'account-card' + (isLast && ACCOUNTS.length % 2 !== 0 ? ' wide' : '');
+    const lines = (cb[acc.name]||[]).map(c =>
+      `<div class="acc-credit">−${c.payment.toLocaleString('ru')} ₽/мес <span class="acc-credit-name">${c.name}</span></div>`).join('');
+    card.innerHTML = `<div class="bank-badge" style="background:${acc.color};color:${acc.textColor}">${acc.letter}</div><div class="acc-name">${acc.name}</div><div class="acc-balance">${fmt(acc.balance)}</div>${lines}`;
+    grid.appendChild(card);
+  });
+  document.getElementById('total-balance').textContent = fmt(total);
+  document.getElementById('credits-summary-total').textContent = fmt(CREDITS.reduce((s,c)=>s+c.payment,0));
+}
+
+function renderCredits() {
+  const list = document.getElementById('credits-list'); list.innerHTML = '';
+  let total = 0;
+  CREDITS.forEach(c => {
+    total += c.payment;
+    const pct = c.total > 0 ? Math.round((1 - c.remaining/c.total)*100) : 0;
+    const item = document.createElement('div'); item.className = 'credit-item';
+    item.innerHTML = `<div class="credit-icon">${c.icon}</div><div class="credit-info"><div class="credit-name">${c.name}</div><div class="credit-bank">${c.bank}</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div><div class="credit-amount"><div class="credit-payment">${fmt(c.payment)}/мес</div><div class="credit-pct">${pct}% выплачено</div></div>`;
+    list.appendChild(item);
+  });
+  document.getElementById('credits-total').textContent = fmt(total);
+}
+
+function renderSubs() {
+  const list = document.getElementById('subs-list'); list.innerHTML = '';
+  let total = 0;
+  SUBS.forEach(s => {
+    total += s.price;
+    const item = document.createElement('div'); item.className = 'sub-item';
+    item.innerHTML = `<div class="sub-icon">${s.icon}</div><div class="sub-name">${s.name}</div><div class="sub-price">${fmt(s.price)}</div>`;
+    list.appendChild(item);
+  });
+  document.getElementById('subs-total').textContent = fmt(total);
+  document.getElementById('subs-summary-total').textContent = fmt(total);
+  const cr = CREDITS.reduce((s,c)=>s+c.payment,0);
+  document.getElementById('total-expenses').textContent = fmt(cr+total);
+  document.getElementById('total-expenses-breakdown').textContent = `кредиты ${fmt(cr)} + подписки ${fmt(total)}`;
+}
+
+renderAccounts(); renderCredits(); renderSubs();
+
+function loadBalance() {
+  fetch('https://api.github.com/repos/Viki-vsprofe/finance-data/contents/balance.json')
+    .then(r => r.json())
+    .then(r => JSON.parse(atob(r.content.replace(/\n/g,''))))
+    .then(data => {
+      const b = data.balances || (data.balance !== undefined ? {'ЮMoney':data.balance} : {});
+      ACCOUNTS.forEach((acc,i) => { if (b[acc.name] !== undefined) ACCOUNTS[i].balance = b[acc.name]; });
+      renderAccounts();
+      if (data.loans) {
+        if (data.loans.loan_zaem !== undefined)      CREDITS[0].remaining = data.loans.loan_zaem;
+        if (data.loans.loan_kredit !== undefined)    CREDITS[1].remaining = data.loans.loan_kredit;
+        if (data.loans.loan_rassrochka !== undefined) CREDITS[2].remaining = data.loans.loan_rassrochka;
+        renderCredits();
+      }
+    }).catch(()=>{});
+}
+loadBalance();
+setInterval(loadBalance, 60000);
+</script>
+</body>
+</html>
