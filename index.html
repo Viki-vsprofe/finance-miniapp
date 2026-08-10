@@ -539,7 +539,7 @@ function renderAgents(data) {
 function loadAgents() {
   fetch('https://api.github.com/repos/Viki-vsprofe/finance-miniapp/contents/agents.json')
     .then(r => r.json())
-    .then(r => JSON.parse(atob(r.content.replace(/\n/g,''))))
+    .then(r => { const b = atob(r.content.replace(/\n/g,'')); return JSON.parse(new TextDecoder('utf-8').decode(Uint8Array.from(b, c => c.charCodeAt(0)))); })
     .then(renderAgents)
     .catch(() => {
       document.getElementById('agents-headline').textContent = 'Нет данных';
@@ -626,7 +626,7 @@ renderAccounts(); renderCredits(); renderSubs();
 function loadBalance() {
   fetch('https://api.github.com/repos/Viki-vsprofe/finance-data/contents/balance.json')
     .then(r => r.json())
-    .then(r => JSON.parse(atob(r.content.replace(/\n/g,''))))
+    .then(r => { const b = atob(r.content.replace(/\n/g,'')); return JSON.parse(new TextDecoder('utf-8').decode(Uint8Array.from(b, c => c.charCodeAt(0)))); })
     .then(data => {
       const b = data.balances || (data.balance !== undefined ? {'ЮMoney':data.balance} : {});
       ACCOUNTS.forEach((acc,i) => { if (b[acc.name] !== undefined) ACCOUNTS[i].balance = b[acc.name]; });
