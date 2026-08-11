@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-11T21:50:26Z",
+  "updated": "2026-08-11T21:50:56Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
@@ -15,7 +15,7 @@
       "icon": "🌸",
       "role": "Личный агент",
       "bot": "@VikiAITeambot",
-      "last_activity": "2026-08-11T21:50:25Z",
+      "last_activity": "2026-08-11T21:50:55Z",
       "status": "running",
       "pid": 67038,
       "cpu": 0.3,
@@ -30,7 +30,7 @@
       "status": "running",
       "pid": 706267,
       "cpu": 0.0,
-      "memory_mb": 692.3
+      "memory_mb": 692.4
     },
     {
       "name": "Копирайтер",
