@@ -1,10 +1,10 @@
 {
-  "updated": "2026-08-15T16:10:57Z",
+  "updated": "2026-08-15T16:15:27Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 1912,
-    "memory_pct": 48.9,
+    "memory_used_mb": 1941,
+    "memory_pct": 49.6,
     "disk_used": "37G",
     "disk_total": "59G",
     "disk_pct": "65"
@@ -15,7 +15,7 @@
       "icon": "🌸",
       "role": "Личный агент",
       "bot": "@VikiAITeambot",
-      "last_activity": "2026-08-15T16:10:57Z",
+      "last_activity": "2026-08-15T16:15:27Z",
       "status": "running",
       "pid": 67038,
       "cpu": 0.3,
@@ -30,7 +30,7 @@
       "status": "running",
       "pid": 706267,
       "cpu": 0.0,
-      "memory_mb": 798.6
+      "memory_mb": 841.2
     },
     {
       "name": "Копирайтер",
