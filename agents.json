@@ -1,10 +1,10 @@
 {
-  "updated": "2026-08-22T23:35:46Z",
+  "updated": "2026-08-22T23:40:17Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 1319,
-    "memory_pct": 33.7,
+    "memory_used_mb": 1352,
+    "memory_pct": 34.6,
     "disk_used": "37G",
     "disk_total": "59G",
     "disk_pct": "66"
@@ -19,7 +19,7 @@
       "status": "running",
       "pid": 917,
       "cpu": 0.2,
-      "memory_mb": 844.5
+      "memory_mb": 882.4
     },
     {
       "name": "Заботушка",
@@ -30,7 +30,7 @@
       "status": "running",
       "pid": 644,
       "cpu": 0.0,
-      "memory_mb": 549.0
+      "memory_mb": 549.1
     },
     {
       "name": "Копирайтер",
@@ -41,7 +41,7 @@
       "status": "running",
       "pid": 915,
       "cpu": 0.2,
-      "memory_mb": 486.7
+      "memory_mb": 486.8
     }
   ]
 }
