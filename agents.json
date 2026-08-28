@@ -1,9 +1,9 @@
 {
-  "updated": "2026-08-28T09:15:52Z",
+  "updated": "2026-08-28T09:20:22Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 1838,
+    "memory_used_mb": 1840,
     "memory_pct": 47.0,
     "disk_used": "37G",
     "disk_total": "59G",
@@ -30,18 +30,18 @@
       "status": "running",
       "pid": 644,
       "cpu": 0.0,
-      "memory_mb": 819.9
+      "memory_mb": 820.1
     },
     {
       "name": "Копирайтер",
       "icon": "✍️",
       "role": "Контент и соцсети",
       "bot": "@VikaTehnoBot",
-      "last_activity": "2026-08-28T09:12:36Z",
+      "last_activity": "2026-08-28T09:16:58Z",
       "status": "running",
       "pid": 915,
       "cpu": 0.3,
-      "memory_mb": 631.3
+      "memory_mb": 618.8
     }
   ]
 }
