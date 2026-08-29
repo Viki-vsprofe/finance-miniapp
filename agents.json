@@ -1,13 +1,13 @@
 {
-  "updated": "2026-08-29T19:05:42Z",
+  "updated": "2026-08-29T19:10:12Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 1759,
-    "memory_pct": 45.0,
+    "memory_used_mb": 1754,
+    "memory_pct": 44.8,
     "disk_used": "37G",
     "disk_total": "59G",
-    "disk_pct": "67"
+    "disk_pct": "66"
   },
   "agents": [
     {
