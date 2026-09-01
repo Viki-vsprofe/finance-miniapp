@@ -1,10 +1,10 @@
 {
-  "updated": "2026-09-01T23:50:44Z",
+  "updated": "2026-09-01T23:55:15Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 1852,
-    "memory_pct": 47.4,
+    "memory_used_mb": 1840,
+    "memory_pct": 47.0,
     "disk_used": "37G",
     "disk_total": "59G",
     "disk_pct": "66"
@@ -30,7 +30,7 @@
       "status": "running",
       "pid": 1661219,
       "cpu": 0.0,
-      "memory_mb": 722.3
+      "memory_mb": 712.8
     },
     {
       "name": "Копирайтер",
@@ -41,7 +41,7 @@
       "status": "running",
       "pid": 915,
       "cpu": 0.4,
-      "memory_mb": 599.1
+      "memory_mb": 599.3
     }
   ]
 }
