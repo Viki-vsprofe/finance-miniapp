@@ -1,10 +1,10 @@
 {
-  "updated": "2026-09-01T13:15:10Z",
+  "updated": "2026-09-01T13:15:41Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 1768,
-    "memory_pct": 45.2,
+    "memory_used_mb": 1764,
+    "memory_pct": 45.1,
     "disk_used": "37G",
     "disk_total": "59G",
     "disk_pct": "66"
