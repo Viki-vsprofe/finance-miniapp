@@ -1,10 +1,10 @@
 {
-  "updated": "2026-09-24T11:10:48Z",
+  "updated": "2026-09-24T11:15:18Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 1726,
-    "memory_pct": 44.1,
+    "memory_used_mb": 1608,
+    "memory_pct": 41.1,
     "disk_used": "28G",
     "disk_total": "59G",
     "disk_pct": "49"
@@ -19,18 +19,18 @@
       "status": "running",
       "pid": 925,
       "cpu": 0.2,
-      "memory_mb": 760.8
+      "memory_mb": 700.4
     },
     {
       "name": "Заботушка",
       "icon": "🍃",
       "role": "Личный уход",
       "bot": "@ZabotushkaBot",
-      "last_activity": "2026-09-22T07:48:24Z",
+      "last_activity": "2026-09-24T11:14:42Z",
       "status": "running",
-      "pid": 2879714,
+      "pid": 3264048,
       "cpu": 0.0,
-      "memory_mb": 741.6
+      "memory_mb": 804.6
     },
     {
       "name": "Копирайтер",
@@ -39,9 +39,9 @@
       "bot": "@VikaTehnoBot",
       "last_activity": "2026-09-10T05:18:47Z",
       "status": "running",
-      "pid": 923,
-      "cpu": 0.2,
-      "memory_mb": 471.8
+      "pid": 3264148,
+      "cpu": 3.2,
+      "memory_mb": 308.2
     }
   ]
 }
