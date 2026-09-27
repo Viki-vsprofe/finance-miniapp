@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-27T20:35:06Z",
+  "updated": "2026-09-27T20:35:21Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
@@ -41,7 +41,7 @@
       "status": "running",
       "pid": 3264148,
       "cpu": 0.2,
-      "memory_mb": 421.5
+      "memory_mb": 421.4
     }
   ]
 }
