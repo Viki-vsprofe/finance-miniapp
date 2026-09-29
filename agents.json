@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-29T13:00:01Z",
+  "updated": "2026-09-29T13:00:31Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
@@ -19,7 +19,7 @@
       "status": "running",
       "pid": 925,
       "cpu": 0.2,
-      "memory_mb": 789.4
+      "memory_mb": 780.4
     },
     {
       "name": "Заботушка",
@@ -41,7 +41,7 @@
       "status": "running",
       "pid": 3264148,
       "cpu": 0.2,
-      "memory_mb": 593.9
+      "memory_mb": 594.0
     }
   ]
 }
