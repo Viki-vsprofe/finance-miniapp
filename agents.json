@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-01T14:35:10Z",
+  "updated": "2026-10-01T14:35:41Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
@@ -30,7 +30,7 @@
       "status": "running",
       "pid": 596,
       "cpu": 0.0,
-      "memory_mb": 673.1
+      "memory_mb": 673.2
     },
     {
       "name": "Копирайтер",
