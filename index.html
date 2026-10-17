@@ -346,6 +346,16 @@ body.dark-mode .tab-btn.active { color: #3d8050; }
   </div>
 </div>
 
+<!-- ДОЛГИ ЛЮДЯМ -->
+<div class="page" id="page-debts">
+  <div class="section-title" style="margin-bottom:16px">Долги людям</div>
+  <div class="credits-list" id="debts-list"></div>
+  <div class="credits-total">
+    <span class="credits-total-label">Итого сейчас</span>
+    <span class="credits-total-amount" id="debts-total">0 ₽</span>
+  </div>
+</div>
+
 <!-- НАВБАР -->
 <div class="tabs">
   <button class="tab-btn active" onclick="showPage('agents',this,'🤖 Команда')">
@@ -359,6 +369,9 @@ body.dark-mode .tab-btn.active { color: #3d8050; }
   </button>
   <button class="tab-btn" onclick="showPage('subs',this,'🔄 Подписки')">
     <span class="icon">🔄</span>Подписки
+  </button>
+  <button class="tab-btn" onclick="showPage('debts',this,'🤝 Долги')">
+    <span class="icon">🤝</span>Долги
   </button>
 </div>
 
@@ -559,9 +572,10 @@ const ACCOUNTS = [
   { name:"ЮMoney",      letter:"Ю", color:"#5C16C5", textColor:"#fff", balance:0 },
 ];
 const CREDITS = [
-  { name:"Заём",      bank:"Т-Банк", icon:"💳", payment:9020, remaining:0, total:150000 },
-  { name:"Кредит",    bank:"Т-Банк", icon:"💳", payment:3340, remaining:0, total:18500 },
-  { name:"Рассрочка", bank:"Халва",  icon:"🛒", payment:4154, remaining:0, total:43500 },
+  { name:"Заём",        bank:"Т-Банк",             icon:"💳", payment:9020,  remaining:0,     total:150000 },
+  { name:"Кредит",      bank:"Т-Банк",             icon:"💳", payment:3340,  remaining:0,     total:18500  },
+  { name:"Рассрочка",   bank:"Халва",              icon:"🛒", payment:4154,  remaining:0,     total:43500  },
+  { name:"ТС",           bank:"Долг ТС",            icon:"🌸", payment:15000, remaining:70000, total:85000  },
 ];
 const SUBS = [
   { name:"ВИП",               icon:"⭐", price:3500 },
@@ -620,7 +634,26 @@ function renderSubs() {
   document.getElementById('total-expenses-breakdown').textContent = `кредиты ${fmt(cr)} + подписки ${fmt(total)}`;
 }
 
-renderAccounts(); renderCredits(); renderSubs();
+// ══ Долги людям ══
+const PERSONAL_DEBTS = [
+  { name:"Татьяна Самойленко", reason:"Школа гейш — обучение", icon:"🌸", monthly:15000, paidMonths:1, totalMonths:6 },
+];
+
+function renderDebts() {
+  const list = document.getElementById('debts-list'); list.innerHTML = '';
+  let total = 0;
+  PERSONAL_DEBTS.forEach(d => {
+    const owed = d.monthly * d.paidMonths;
+    total += owed;
+    const pct = Math.round(d.paidMonths / d.totalMonths * 100);
+    const item = document.createElement('div'); item.className = 'credit-item';
+    item.innerHTML = `<div class="credit-icon">${d.icon}</div><div class="credit-info"><div class="credit-name">${d.name}</div><div class="credit-bank">${d.reason}</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:var(--red)"></div></div></div><div class="credit-amount"><div class="credit-payment" style="color:var(--red)">${fmt(owed)}</div><div class="credit-pct">${d.paidMonths}/${d.totalMonths} мес</div></div>`;
+    list.appendChild(item);
+  });
+  document.getElementById('debts-total').textContent = fmt(total);
+}
+
+renderAccounts(); renderCredits(); renderSubs(); renderDebts();
 
 function loadBalance() {
   fetch('https://api.github.com/repos/Viki-vsprofe/finance-data/contents/balance.json')
