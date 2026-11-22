@@ -656,6 +656,21 @@ function renderDebts() {
 
 renderAccounts(); renderCredits(); renderSubs(); renderDebts();
 
+function loadDebts() {
+  fetch('https://api.github.com/repos/Viki-vsprofe/finance-data/contents/debts.json')
+    .then(r => r.json())
+    .then(r => { const b = atob(r.content.replace(/\n/g,'')); return JSON.parse(new TextDecoder('utf-8').decode(Uint8Array.from(b, c => c.charCodeAt(0)))); })
+    .then(data => {
+      if (data.debts && Array.isArray(data.debts)) {
+        PERSONAL_DEBTS.length = 0;
+        data.debts.forEach(d => PERSONAL_DEBTS.push(d));
+        renderDebts();
+      }
+    }).catch(()=>{});
+}
+loadDebts();
+setInterval(loadDebts, 60000);
+
 function loadBalance() {
   fetch('https://api.github.com/repos/Viki-vsprofe/finance-data/contents/balance.json')
     .then(r => r.json())
