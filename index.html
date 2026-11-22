@@ -634,7 +634,7 @@ function renderSubs() {
 
 // ══ Долги людям ══
 const PERSONAL_DEBTS = [
-  { name:"Татьяна Самойленко", reason:"Долг", icon:"🤝", paid:30000, total:85000, monthly:15000 },
+  { name:"Татьяна Самойленко", reason:"Обучение", icon:"🤝", paid:30000, total:90000, monthly:15000 },
   { name:"Мама", reason:"Долг", icon:"❤️", paid:0, total:5000, monthly:0 },
 ];
 
@@ -643,10 +643,12 @@ function renderDebts() {
   let totalOwed = 0;
   PERSONAL_DEBTS.forEach(d => {
     totalOwed += d.paid;
-    const pct = Math.round(d.paid / d.total * 100);
-    const remaining = d.total - d.paid;
+    const pct = d.total > 0 ? Math.round(d.paid / d.total * 100) : 0;
+    const paidCount = d.monthly > 0 ? Math.round(d.paid / d.monthly) : 0;
+    const totalCount = d.monthly > 0 ? Math.round(d.total / d.monthly) : 0;
+    const subText = d.monthly > 0 ? `${paidCount}/${totalCount} мес` : `из ${fmt(d.total)} ₽`;
     const item = document.createElement('div'); item.className = 'credit-item';
-    item.innerHTML = `<div class="credit-icon">${d.icon}</div><div class="credit-info"><div class="credit-name">${d.name}</div><div class="credit-bank">${d.reason}</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:var(--red)"></div></div></div><div class="credit-amount"><div class="credit-payment" style="color:var(--red)">${fmt(d.paid)} ₽</div><div class="credit-pct">из ${fmt(d.total)} ₽</div></div>`;
+    item.innerHTML = `<div class="credit-icon">${d.icon}</div><div class="credit-info"><div class="credit-name">${d.name}</div><div class="credit-bank">${d.reason}</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:var(--red)"></div></div></div><div class="credit-amount"><div class="credit-payment" style="color:var(--red)">${fmt(d.paid)} ₽</div><div class="credit-pct">${subText}</div></div>`;
     list.appendChild(item);
   });
   document.getElementById('debts-total').textContent = fmt(totalOwed);
