@@ -1,10 +1,10 @@
 {
-  "updated": "2026-11-22T15:00:30Z",
+  "updated": "2026-11-22T15:00:59Z",
   "scheduler": "running",
   "system": {
     "memory_total_mb": 3911,
-    "memory_used_mb": 1876,
-    "memory_pct": 48.0,
+    "memory_used_mb": 1872,
+    "memory_pct": 47.9,
     "disk_used": "34G",
     "disk_total": "59G",
     "disk_pct": "61"
@@ -19,7 +19,7 @@
       "status": "running",
       "pid": 644669,
       "cpu": 0.4,
-      "memory_mb": 774.5
+      "memory_mb": 774.7
     },
     {
       "name": "Заботушка",
