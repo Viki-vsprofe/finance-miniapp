@@ -572,10 +572,8 @@ const ACCOUNTS = [
   { name:"ЮMoney",      letter:"Ю", color:"#5C16C5", textColor:"#fff", balance:0 },
 ];
 const CREDITS = [
-  { name:"Заём",        bank:"Т-Банк",             icon:"💳", payment:9020,  remaining:0,     total:150000 },
-  { name:"Кредит",      bank:"Т-Банк",             icon:"💳", payment:3340,  remaining:0,     total:18500  },
-  { name:"Рассрочка",   bank:"Халва",              icon:"🛒", payment:4154,  remaining:0,     total:43500  },
-  { name:"ТС",           bank:"Долг ТС",            icon:"🌸", payment:15000, remaining:70000, total:85000  },
+  { name:"Кредит",      bank:"Т-Банк",             icon:"💳", payment:3340,  remaining:0,     total:19990  },
+  { name:"Рассрочка",   bank:"Халва",              icon:"🛒", payment:4154,  remaining:0,     total:49848  },
 ];
 const SUBS = [
   { name:"ВИП",               icon:"⭐", price:3500 },
@@ -636,24 +634,42 @@ function renderSubs() {
 
 // ══ Долги людям ══
 const PERSONAL_DEBTS = [
-  { name:"Татьяна Самойленко", reason:"Школа гейш — обучение", icon:"🌸", monthly:15000, paidMonths:1, totalMonths:6 },
+  { name:"Татьяна Самойленко", reason:"Обучение", icon:"🤝", paid:30000, total:90000, monthly:15000 },
+  { name:"Мама", reason:"Долг", icon:"❤️", paid:0, total:5000, monthly:0 },
 ];
 
 function renderDebts() {
   const list = document.getElementById('debts-list'); list.innerHTML = '';
-  let total = 0;
+  let totalOwed = 0;
   PERSONAL_DEBTS.forEach(d => {
-    const owed = d.monthly * d.paidMonths;
-    total += owed;
-    const pct = Math.round(d.paidMonths / d.totalMonths * 100);
+    totalOwed += d.paid;
+    const pct = d.total > 0 ? Math.round(d.paid / d.total * 100) : 0;
+    const paidCount = d.monthly > 0 ? Math.round(d.paid / d.monthly) : 0;
+    const totalCount = d.monthly > 0 ? Math.round(d.total / d.monthly) : 0;
+    const subText = d.monthly > 0 ? `${paidCount}/${totalCount} мес` : `из ${fmt(d.total)} ₽`;
     const item = document.createElement('div'); item.className = 'credit-item';
-    item.innerHTML = `<div class="credit-icon">${d.icon}</div><div class="credit-info"><div class="credit-name">${d.name}</div><div class="credit-bank">${d.reason}</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:var(--red)"></div></div></div><div class="credit-amount"><div class="credit-payment" style="color:var(--red)">${fmt(owed)}</div><div class="credit-pct">${d.paidMonths}/${d.totalMonths} мес</div></div>`;
+    item.innerHTML = `<div class="credit-icon">${d.icon}</div><div class="credit-info"><div class="credit-name">${d.name}</div><div class="credit-bank">${d.reason}</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:var(--red)"></div></div></div><div class="credit-amount"><div class="credit-payment" style="color:var(--red)">${fmt(d.paid)} ₽</div><div class="credit-pct">${subText}</div></div>`;
     list.appendChild(item);
   });
-  document.getElementById('debts-total').textContent = fmt(total);
+  document.getElementById('debts-total').textContent = fmt(totalOwed);
 }
 
 renderAccounts(); renderCredits(); renderSubs(); renderDebts();
+
+function loadDebts() {
+  fetch('https://api.github.com/repos/Viki-vsprofe/finance-data/contents/debts.json')
+    .then(r => r.json())
+    .then(r => { const b = atob(r.content.replace(/\n/g,'')); return JSON.parse(new TextDecoder('utf-8').decode(Uint8Array.from(b, c => c.charCodeAt(0)))); })
+    .then(data => {
+      if (data.debts && Array.isArray(data.debts)) {
+        PERSONAL_DEBTS.length = 0;
+        data.debts.forEach(d => PERSONAL_DEBTS.push(d));
+        renderDebts();
+      }
+    }).catch(()=>{});
+}
+loadDebts();
+setInterval(loadDebts, 60000);
 
 function loadBalance() {
   fetch('https://api.github.com/repos/Viki-vsprofe/finance-data/contents/balance.json')
@@ -664,9 +680,8 @@ function loadBalance() {
       ACCOUNTS.forEach((acc,i) => { if (b[acc.name] !== undefined) ACCOUNTS[i].balance = b[acc.name]; });
       renderAccounts();
       if (data.loans) {
-        if (data.loans.loan_zaem !== undefined)      CREDITS[0].remaining = data.loans.loan_zaem;
-        if (data.loans.loan_kredit !== undefined)    CREDITS[1].remaining = data.loans.loan_kredit;
-        if (data.loans.loan_rassrochka !== undefined) CREDITS[2].remaining = data.loans.loan_rassrochka;
+        if (data.loans.loan_kredit !== undefined)     CREDITS[0].remaining = data.loans.loan_kredit;
+        if (data.loans.loan_rassrochka !== undefined) CREDITS[1].remaining = data.loans.loan_rassrochka;
         renderCredits();
       }
     }).catch(()=>{});
