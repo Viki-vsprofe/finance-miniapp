@@ -572,7 +572,7 @@ const ACCOUNTS = [
   { name:"ЮMoney",      letter:"Ю", color:"#5C16C5", textColor:"#fff", balance:0 },
 ];
 const CREDITS = [
-  { name:"Заём",        bank:"Т-Банк",             icon:"💳", payment:9020,  remaining:0,     total:150000 },
+  { name:"Кредит",      bank:"Т-Банк",             icon:"💳", payment:3340,  remaining:0,     total:18500  },
   { name:"Рассрочка",   bank:"Халва",              icon:"🛒", payment:4154,  remaining:0,     total:43500  },
 ];
 const SUBS = [
@@ -665,7 +665,7 @@ function loadBalance() {
       ACCOUNTS.forEach((acc,i) => { if (b[acc.name] !== undefined) ACCOUNTS[i].balance = b[acc.name]; });
       renderAccounts();
       if (data.loans) {
-        if (data.loans.loan_zaem !== undefined)      CREDITS[0].remaining = data.loans.loan_zaem;
+        if (data.loans.loan_kredit !== undefined)     CREDITS[0].remaining = data.loans.loan_kredit;
         if (data.loans.loan_rassrochka !== undefined) CREDITS[1].remaining = data.loans.loan_rassrochka;
         renderCredits();
       }
